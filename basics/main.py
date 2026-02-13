@@ -1,8 +1,9 @@
 import sys
 
+from PyQt6.QtWidgets import QSizePolicy
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow
+from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout
 
 
 class MyWindow(QMainWindow):
@@ -24,10 +25,15 @@ def main():
     height = screen_geometry.height()
 
     window = MyWindow(height, screen_geometry)
-    label = QLabel(window)
+    layout = QVBoxLayout(window)
+
+    label = QLabel()
+    layout.addWidget(label)
+    label.setWordWrap(True)
     label.setText("bear" * 100)
 
-    font = QFont("Arial", 12)
+    label.resize(height, 200)
+
     font = QFont("Times New Roman", 14)
     font.setItalic(True)
 
