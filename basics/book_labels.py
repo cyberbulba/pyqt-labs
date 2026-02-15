@@ -3,7 +3,7 @@ import sys
 from Book import Book
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget, QScrollArea
 
 
 class MyWindow(QWidget):
@@ -15,10 +15,15 @@ class MyWindow(QWidget):
     def initUI(self):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+
+        cont = QWidget()
+        cont_layout = QVBoxLayout(cont)
 
         self.height = screen_geometry.height()
         self.width = screen_geometry.width()
-        self.layout = QVBoxLayout(self)
+        layout = QVBoxLayout(self)
 
         self.setFixedSize(self.width, self.height)
 
@@ -27,9 +32,12 @@ class MyWindow(QWidget):
         self.move(window_geometry.topLeft())
 
         for book in self.books:
-            self.create_text_label(book.print_book())
+            self.create_text_label(book.print_book(), cont_layout)
 
-    def create_text_label(self, info):
+        scroll.setWidget(cont)
+        layout.addWidget(scroll)
+
+    def create_text_label(self, info, layout):
         label = QLabel()
         label.setWordWrap(True)
         label.setText(info)
@@ -39,15 +47,11 @@ class MyWindow(QWidget):
         label.setFont(font)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setMargin(15)
-        self.layout.addWidget(label)
+        layout.addWidget(label)
 
 
 def main():
-    books = [Book("Петров", "Информатика", 260, "1"),
-             Book("Петров", "Информатика", 260, "1"),
-             Book("Петров", "Информатика", 260, "1"),
-             Book("Петров", "Информатика", 260, "1"),
-             Book("Петров", "Информатика", 260, "1")]
+    books = [Book("Петров", "Информатика", 260, "1") for i in range (20)]
     app = QApplication(sys.argv)
     window = MyWindow(books)
     window.show()
