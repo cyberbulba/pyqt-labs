@@ -27,7 +27,7 @@ class MyWindow(QWidget):
     def create_text_label_1(self):
         label1 = QLabel(self)
         label1.setWordWrap(True)
-        label1.setText("bear " * 120)
+        label1.setText("hello world! " * 100)
         label1.resize(self.height, self.height // 3)
         font = QFont("Times New Roman", 14)
         font.setItalic(True)

@@ -21,11 +21,12 @@ class MyWindow(QWidget):
         cont = QWidget()
         cont_layout = QVBoxLayout(cont)
 
-        self.height = screen_geometry.height()
-        self.width = screen_geometry.width()
+        height = screen_geometry.height()
+        width = screen_geometry.width()
+
         layout = QVBoxLayout(self)
 
-        self.setFixedSize(self.width, self.height)
+        self.setFixedSize(width, height)
 
         window_geometry = self.frameGeometry()
         window_geometry.moveCenter(screen_geometry.center())
@@ -41,7 +42,6 @@ class MyWindow(QWidget):
         label = QLabel()
         label.setWordWrap(True)
         label.setText(info)
-        label.resize(self.height, self.height // 3)
         font = QFont("Times New Roman", 14)
         font.setItalic(True)
         label.setFont(font)
@@ -51,7 +51,9 @@ class MyWindow(QWidget):
 
 
 def main():
-    books = [Book("Петров", "Информатика", 260, "1") for i in range (20)]
+    books = ([Book("Тарас Бульба", "Гоголь", 300, "Books/bulba.jpg") for i in range(20)] +
+             [Book("Капитанская дочка", "Пушкин", 130, "Books/capitan_daughter.jpg") for i in range(20)])
+
     app = QApplication(sys.argv)
     window = MyWindow(books)
     window.show()
