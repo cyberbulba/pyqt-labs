@@ -12,6 +12,8 @@ class MyWindow(QWidget):
         self.initUI()
 
     def initUI(self):
+        self.setWindowTitle("Список книг")
+
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()
         height = screen_geometry.height()

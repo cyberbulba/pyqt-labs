@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QPixmap
+from PySide6.QtGui import QFont, QPixmap, QIcon
 from PySide6.QtWidgets import QApplication, QLabel, QWidget
 
 
@@ -11,6 +11,9 @@ class MyWindow(QWidget):
         self.initUI()
 
     def initUI(self):
+        self.setWindowTitle("Моё первое окно")
+        self.setWindowIcon(QIcon("boloto.jpg"))
+
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
         self.height = screen_geometry.height()
