@@ -12,27 +12,27 @@ class MyWindow(QWidget):
 
     def initUI(self):
         screen = QApplication.primaryScreen()
-        screen_geometry = screen.availableGeometry()
+        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
         self.height = screen_geometry.height()
-
         self.setFixedSize(self.height, self.height)
 
         window_geometry = self.frameGeometry()
-        window_geometry.moveCenter(screen_geometry.center())
+        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
         self.move(window_geometry.topLeft())
-        self.create_text_label_1()
+
+        self.create_text_label_1()  # создаём метки
         self.create_text_label_2()
         self.create_image_label()
 
     def create_text_label_1(self):
         label1 = QLabel(self)
-        label1.setWordWrap(True)
+        label1.setWordWrap(True)  # перенос слов в label'е
         label1.setText("hello world! " * 100)
         label1.resize(self.height, self.height // 3)
         font = QFont("Times New Roman", 14)
         font.setItalic(True)
         label1.setFont(font)
-        label1.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label1.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
         label1.setMargin(15)
 
     def create_text_label_2(self):

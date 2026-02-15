@@ -1,9 +1,8 @@
 import sys
 
 from Book import Book
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget, QScrollArea
+from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QScrollArea
 
 
 class MyWindow(QWidget):
@@ -15,44 +14,44 @@ class MyWindow(QWidget):
     def initUI(self):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()
+        height = screen_geometry.height()
+        width = screen_geometry.width()
+        self.setFixedSize(width, height)
+
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
 
         cont = QWidget()
         cont_layout = QVBoxLayout(cont)
 
-        height = screen_geometry.height()
-        width = screen_geometry.width()
-
         layout = QVBoxLayout(self)
 
-        self.setFixedSize(width, height)
-
-        window_geometry = self.frameGeometry()
-        window_geometry.moveCenter(screen_geometry.center())
-        self.move(window_geometry.topLeft())
-
         for book in self.books:
-            self.create_text_label(book.print_book(), cont_layout)
+            self.create_text_label(book, cont_layout)
 
         scroll.setWidget(cont)
         layout.addWidget(scroll)
 
-    def create_text_label(self, info, layout):
+    def create_text_label(self, book, layout):
         label = QLabel()
-        label.setWordWrap(True)
-        label.setText(info)
+        label.setWordWrap(True)  # на каждую книгу 2 label: с текстом и картинкой
+        label.setText(book.print_book())
         font = QFont("Times New Roman", 14)
         font.setItalic(True)
         label.setFont(font)
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setMargin(15)
         layout.addWidget(label)
 
+        pix_label = QLabel()
+        pixmap = QPixmap(book.get_file())
+        pixmap = pixmap.scaledToHeight(300)
+        pix_label.setPixmap(pixmap)
+        layout.addWidget(pix_label)
+
 
 def main():
-    books = ([Book("Тарас Бульба", "Гоголь", 300, "Books/bulba.jpg") for i in range(20)] +
-             [Book("Капитанская дочка", "Пушкин", 130, "Books/capitan_daughter.jpg") for i in range(20)])
+    books = ([Book("Тарас Бульба", "Гоголь", 300, "Books/bulba.jpg") for _ in range(20)] +
+             [Book("Капитанская дочка", "Пушкин", 130, "Books/capitan_daughter.jpg") for _ in range(20)])
 
     app = QApplication(sys.argv)
     window = MyWindow(books)
