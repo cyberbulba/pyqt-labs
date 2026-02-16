@@ -50,6 +50,7 @@ class MyWindow(QWidget):
         except FileNotFoundError:
             print(f"нет фото{book.print_book()} ")
             exit(1)
+
         pixmap = pixmap.scaledToHeight(300)
         pix_label.setPixmap(pixmap)
         self.layout.addWidget(pix_label)

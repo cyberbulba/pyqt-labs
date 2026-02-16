@@ -53,6 +53,7 @@ class MyWindow(QWidget):
         label2.setMargin(15)
         label2.move(0, self.height // 3)
         label2.setStyleSheet("border: 1px solid red")
+
         label2.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignBottom)
 
     def create_image_label(self):
