@@ -10,10 +10,11 @@ from PySide6.QtCore import Slot
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.count = 0
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Кнопка")
+        self.setWindowTitle("Счётчик")
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
@@ -32,18 +33,23 @@ class MyWindow(QMainWindow):
 
         self.create_text_label_1()  # создаём метки
 
-        button = QPushButton("Нажми на меня!")
-        self.layout.addWidget(button)
-        button.pressed.connect(self.swap_label_pressed)
-        button.released.connect(self.swap_label_released)
+        button1 = QPushButton("Увеличить число")
+        self.layout.addWidget(button1)
+        button1.clicked.connect(self.count_up)
+
+        button2 = QPushButton("Обнулить счётчик")
+        self.layout.addWidget(button2)
+        button2.clicked.connect(self.count_clear)
 
     @Slot()
-    def swap_label_pressed(self):
-        self.label.setText("Кнопка нажата!")
+    def count_up(self):
+        self.count += 1
+        self.label.setText(f"{self.count}")
 
     @Slot()
-    def swap_label_released(self):
-        self.label.setText("Кнопка отпущена!")
+    def count_clear(self):
+        self.count = 0
+        self.label.setText(f"{self.count}")
 
     def create_text_label_1(self):
         self.label = QLabel()
@@ -55,7 +61,7 @@ class MyWindow(QMainWindow):
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
         self.label.setMargin(15)
         self.layout.addWidget(self.label)
-        self.label.setText("Кнопка не нажата!")
+        self.label.setText(f'{self.count}')
 
 
 def main():
