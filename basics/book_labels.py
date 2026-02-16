@@ -45,7 +45,10 @@ class MyWindow(QWidget):
         layout.addWidget(label)
 
         pix_label = QLabel()
-        pixmap = QPixmap(book.get_file())
+        try:
+            pixmap = QPixmap(book.get_file())
+        except FileNotFoundError:
+            exit()
         pixmap = pixmap.scaledToHeight(300)
         pix_label.setPixmap(pixmap)
         layout.addWidget(pix_label)
