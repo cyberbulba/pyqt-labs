@@ -12,7 +12,11 @@ class MyWindow(QWidget):
 
     def initUI(self):
         self.setWindowTitle("Моё первое окно")
-        self.setWindowIcon(QIcon("boloto.jpg"))
+
+        try:
+            self.setWindowIcon(QIcon("boloto.jpg"))
+        except FileNotFoundError:
+            exit()
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
@@ -30,8 +34,9 @@ class MyWindow(QWidget):
     def create_text_label_1(self):
         label1 = QLabel(self)
         label1.setWordWrap(True)  # перенос слов в label'е
-        label1.setText("hello world! " * 50)
+        label1.setText("hello world! " * 20)
         label1.resize(self.height, self.height // 3)
+        label1.setStyleSheet("border: 1px solid red")
         font = QFont("Times New Roman", 14)
         font.setItalic(True)
         label1.setFont(font)
@@ -46,11 +51,15 @@ class MyWindow(QWidget):
         label2.setFont(font)
         label2.setMargin(15)
         label2.move(0, self.height // 3)
+        label2.setStyleSheet("border: 1px solid red")
         label2.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignBottom)
 
     def create_image_label(self):
         label3 = QLabel(self)
-        pixmap = QPixmap("boloto.jpg")
+        try:
+            pixmap = QPixmap("boloto.jpg")
+        except FileNotFoundError:
+            exit()
         pixmap = pixmap.scaledToHeight(self.height // 3)
         label3.setPixmap(pixmap)
         label3.move(0, 2 * self.height // 3)
