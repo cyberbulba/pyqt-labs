@@ -16,7 +16,7 @@ class MyWindow(QWidget):
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
-        self.height = screen_geometry.height()
+        self.height = int(screen_geometry.height() * 0.7)
         self.setFixedSize(self.height, self.height)
 
         window_geometry = self.frameGeometry()
@@ -30,7 +30,7 @@ class MyWindow(QWidget):
     def create_text_label_1(self):
         label1 = QLabel(self)
         label1.setWordWrap(True)  # перенос слов в label'е
-        label1.setText("hello world! " * 100)
+        label1.setText("hello world! " * 50)
         label1.resize(self.height, self.height // 3)
         font = QFont("Times New Roman", 14)
         font.setItalic(True)

@@ -16,8 +16,8 @@ class MyWindow(QWidget):
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()
-        height = screen_geometry.height()
-        width = screen_geometry.width()
+        height = int(screen_geometry.height() * 0.7)
+        width = int(screen_geometry.width() * 0.8)
         self.setFixedSize(width, height)
 
         scroll = QScrollArea()
