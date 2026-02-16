@@ -26,15 +26,15 @@ class MyWindow(QWidget):
         cont = QWidget()
         cont_layout = QVBoxLayout(cont)
 
-        layout = QVBoxLayout(self)
+        self.layout = QVBoxLayout(self)
 
         for book in self.books:
             self.create_text_label(book, cont_layout)
 
         scroll.setWidget(cont)
-        layout.addWidget(scroll)
+        self.layout.addWidget(scroll)
 
-    def create_text_label(self, book, layout):
+    def create_text_label(self, book):
         label = QLabel()
         label.setWordWrap(True)  # на каждую книгу 2 label: с текстом и картинкой
         label.setText(book.print_book())
@@ -42,16 +42,17 @@ class MyWindow(QWidget):
         font.setItalic(True)
         label.setFont(font)
         label.setMargin(15)
-        layout.addWidget(label)
+        self.layout.addWidget(label)
 
         pix_label = QLabel()
         try:
             pixmap = QPixmap(book.get_file())
         except FileNotFoundError:
-            exit()
+            print(f"нет фото{book.print_book()} ")
+            exit(1)
         pixmap = pixmap.scaledToHeight(300)
         pix_label.setPixmap(pixmap)
-        layout.addWidget(pix_label)
+        self.layout.addWidget(pix_label)
 
 
 def main():

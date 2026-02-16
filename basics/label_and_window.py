@@ -21,7 +21,8 @@ class MyWindow(QWidget):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
         self.height = int(screen_geometry.height() * 0.7)
-        self.setFixedSize(self.height, self.height)
+
+        self.setMinimumSize(600, 600)
 
         window_geometry = self.frameGeometry()
         window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
