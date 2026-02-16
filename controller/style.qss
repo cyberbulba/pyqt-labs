@@ -1,0 +1,23 @@
+QLabel {
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    font: bold 14px "Times New Roman";
+    padding: 8px 20px;
+}
+
+QPushButton {
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    font: bold 14px "Times New Roman";
+    padding: 10 px;
+}
+
+QLineEdit {
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    font: bold 14px "Times New Roman";
+    padding: 10 px;
+}

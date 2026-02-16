@@ -10,11 +10,6 @@ from PySide6.QtCore import Slot
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.count = 0
-
-        self.first_number = None
-        self.second_number = None
-
         self.initUI()
 
     def initUI(self):
@@ -23,7 +18,7 @@ class MyWindow(QMainWindow):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
 
-        self.height = int(screen_geometry.height() * 0.5)
+        self.height = int(screen_geometry.height() * 0.8)
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)
@@ -35,48 +30,38 @@ class MyWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
 
+        self.create_text_label("Введите первое число:")
         self.line_edit1 = QLineEdit()
         self.layout.addWidget(self.line_edit1)
-        self.create_text_label("Введите первое число")
 
+        self.create_text_label("Введите второе число:")
         self.line_edit2 = QLineEdit()
         self.layout.addWidget(self.line_edit2)
-        self.create_text_label("Введите второе число")
 
         button1 = QPushButton("+")
         self.layout.addWidget(button1)
         button1.clicked.connect(self.plus)
 
-        button1 = QPushButton("-")
-        self.layout.addWidget(button1)
-        button1.clicked.connect(self.minus)
+        button2 = QPushButton("-")
+        self.layout.addWidget(button2)
+        button2.clicked.connect(self.minus)
 
-        button1 = QPushButton("*")
-        self.layout.addWidget(button1)
-        button1.clicked.connect(self.mult)
+        button3 = QPushButton("*")
+        self.layout.addWidget(button3)
+        button3.clicked.connect(self.mult)
 
-        button1 = QPushButton("/")
-        self.layout.addWidget(button1)
-        button1.clicked.connect(self.division)
+        button4 = QPushButton("/")
+        self.layout.addWidget(button4)
+        button4.clicked.connect(self.division)
 
-        button1 = QPushButton("=")
-        self.layout.addWidget(button1)
-        button1.clicked.connect(self.count_up)
+        button5 = QPushButton("**")
+        self.layout.addWidget(button5)
+        button5.clicked.connect(self.power)
 
         self.create_text_label("Результат:")
 
         self.rez_label = QLabel()
         self.layout.addWidget(self.rez_label)
-
-    @Slot()
-    def count_up(self):
-        self.count += 1
-        self.label.setText(f"{self.count}")
-
-    @Slot()
-    def count_clear(self):
-        self.count = 0
-        self.label.setText(f"{self.count}")
 
     @Slot()
     def plus(self):
@@ -126,20 +111,29 @@ class MyWindow(QMainWindow):
         else:
             self.rez_label.setText("Введены неправильные числа!")
 
+    @Slot()
+    def power(self):
+        self.rez_label.setText("")
+
+        text1 = self.line_edit1.text()
+        text2 = self.line_edit2.text()
+
+        if text1.isdigit() and text2.isdigit():
+            self.rez_label.setText(f"{text1}<sup>{text2}</sup> = {int(text1) ** int(text2)}")
+        else:
+            self.rez_label.setText("Введены неправильные числа!")
+
     def create_text_label(self, text):
-        self.label = QLabel()
-        self.label.setWordWrap(True)  # перенос слов в label'е
-        font = QFont("Times New Roman", 14)
-        font.setItalic(True)
-        self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
-        self.label.setMargin(15)
-        self.layout.addWidget(self.label)
-        self.label.setText(text)
+        label = QLabel()
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
+        self.layout.addWidget(label)
+        label.setText(text)
 
 
 def main():
     app = QApplication(sys.argv)
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
     window = MyWindow()
     window.show()
     app.exec()
