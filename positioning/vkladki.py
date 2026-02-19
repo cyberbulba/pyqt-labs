@@ -1,5 +1,6 @@
 import sys
 
+from PySide6.QtWidgets import QGridLayout
 from PySide6.QtWidgets import QTabWidget
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit
 from PySide6.QtCore import Qt
@@ -38,6 +39,8 @@ class MyWindow(QMainWindow):
         window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
         self.move(window_geometry.topLeft())
 
+        layout = QGridLayout(self.tab1)
+        layout.addWidget(QLabel('First'), 0, 0)
 
         #
         # self.layout = QVBoxLayout(self.central_widget)
@@ -49,8 +52,6 @@ class MyWindow(QMainWindow):
         #
         # self.text_edit = QTextEdit()
         # self.layout.addWidget(self.text_edit)
-
-
 
 
 def main():
