@@ -39,11 +39,11 @@ class MyWindow(QMainWindow):
         self.checkbox_layout = QVBoxLayout()
         self.layout.addLayout(self.checkbox_layout)
 
-        arr = ["ананас - 80 руб/кг", "сливы - 70 руб/кг", "яблоки зелёные - 30 руб/кг",
-               "бананы - 50 руб/кг", "груши - 60 руб/кг"]
+        self.cost_arr = [("виноград", 80), ("сливы", 70), ("яблоки зелёные", 30),
+               ("бананы", 50), ("груши", 60)]
 
-        for i in range(len(arr)):
-            check_box = QCheckBox(arr[i])
+        for i in range(len(self.cost_arr)):
+            check_box = QCheckBox(self.cost_arr[i][0] + ' - ' + str(self.cost_arr[i][1]) + ' руб/кг')
 
             spinBox = QSpinBox()
             spinBox.setRange(0, 30)
@@ -62,19 +62,20 @@ class MyWindow(QMainWindow):
 
     def handle_checkboxes(self):
         self.cost = 0
-        arr = [80, 70, 30, 50, 60]
         for i in range(0, self.checkbox_layout.count(), 2):
             checkbox = self.checkbox_layout.itemAt(i).widget()
             spinbox = self.checkbox_layout.itemAt(i + 1).widget()
 
+            price = self.cost_arr[i // 2][1]
+
             if checkbox.isChecked():
-                self.cost += 50 * spinbox.value()
+                self.cost += price * spinbox.value()
 
     @Slot()
     def get_cost(self):
         self.handle_checkboxes()
 
-        self.label_res.setText(f'{self.cost}')
+        self.label_res.setText(f'К оплате: {self.cost} руб')
 
 
 def main():
