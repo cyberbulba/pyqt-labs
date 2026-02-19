@@ -61,13 +61,17 @@ class MyWindow(QMainWindow):
             hours = round(s // 3600)
             years = round(s // (3600 * 24 * 365))
 
-            self.text_edit.setText(f'Вы живёте {years} лет или {hours} часов или {s} секунд')
+            self.text_edit.setText(f'Вы живёте полных лет: {years} \nили {hours} часов \nили {s} секунд')
         else:
             self.text_edit.setText('Вы ввели неправильную дату!')
 
 
 def main():
     app = QApplication(sys.argv)
+
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
     window = MyWindow()
     window.show()
     app.exec()
