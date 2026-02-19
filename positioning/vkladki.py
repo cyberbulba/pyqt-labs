@@ -34,9 +34,11 @@ class MyWindow(QMainWindow):
 
         self.tabs.setFixedSize(self.height, self.height)
 
-        # window_geometry = self.frameGeometry()
-        # window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
-        # self.move(window_geometry.topLeft())
+        window_geometry = self.frameGeometry()
+        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
+        self.move(window_geometry.topLeft())
+
+
         #
         # self.layout = QVBoxLayout(self.central_widget)
         #
