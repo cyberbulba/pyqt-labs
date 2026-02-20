@@ -43,48 +43,57 @@ class MyWindow(QMainWindow):
                 [["Практикум на ЭВМ\n по языкам программирования"], ["Диффуры пр"]],
                 [["нет пары"], ["Практикум на ЭВМ\n по языкам программирования"]]]
 
-        arr2 = [["Диффуры лекц"], ["Языки и методы программирования л"],
+        arr2 = [["Диффуры л"], ["Языки и методы программирования л"],
                 [["Компл. анализ пр"], ["Основы тестирования ПО пр"]],
                 [["Физика пр"], ["нет пары"]], [["Физика пр", "нет пары"], ["нет пары", "нет пары"]]]
 
         self.layout = QGridLayout(self.tab1)
 
         self.layout.addWidget(QLabel('День недели'), 0, 0)
-        self.layout.addWidget(QLabel('Числитель/знаменатель'), 0, 1)
-        self.layout.addWidget(QLabel('ИВТ-21БО'), 0, 2)
-        self.layout.addWidget(QLabel('ИВТ-22БО'), 0, 3)
+        self.layout.addWidget(QLabel('Номер пары'), 0, 1)
+        self.layout.addWidget(QLabel('Числитель/знаменатель'), 0, 2)
+        self.layout.addWidget(QLabel('ИВТ-21БО'), 0, 3)
+        self.layout.addWidget(QLabel('ИВТ-22БО'), 0, 4)
 
         add = self.add_day("Понедельник", arr1, 1)
         self.add_day("Вторник", arr2, add)
 
     def add_day(self, day, arr1, add):  # переменная добавки на случай, если пара делится на числитель и знаменатель
+        pair_num = 1
         for i in range(len(arr1)):
             add_flag = 0
             flag = 0
             if len(arr1[i]) == 1:
-                self.layout.addWidget(QLabel(arr1[i][0]), i + add, 2, 1, 2)
-                self.layout.addWidget(QLabel("Числитель + знаменатель"), i + add, 1)
+                self.layout.addWidget(QLabel(arr1[i][0]), i + add, 3, 1, 2)
+                self.layout.addWidget(QLabel("Числитель + знаменатель"), i + add, 2)
                 self.layout.addWidget(QLabel(day), i + add, 0)
+                self.layout.addWidget(QLabel(str(pair_num)), i + add, 1)
+                pair_num += 1
 
             else:
                 if len(arr1[i][0]) == 2:  # случай с числителем и знаменателем
-                    self.layout.addWidget(QLabel("Числитель"), i + add, 1)
-                    self.layout.addWidget(QLabel("Знаменатель"), i + add + 1, 1)
+                    self.layout.addWidget(QLabel("Числитель"), i + add, 2)
+                    self.layout.addWidget(QLabel("Знаменатель"), i + add + 1, 2)
                     self.layout.addWidget(QLabel(day), i + add + 1, 0)
+                    self.layout.addWidget(QLabel(str(pair_num)), i + add, 1)
+                    self.layout.addWidget(QLabel(str(pair_num)), i + add + 1, 1)
                     flag = 1
+
                 else:
-                    self.layout.addWidget(QLabel("Числитель + знаменатель"), i + add, 1)
+                    self.layout.addWidget(QLabel("Числитель + знаменатель"), i + add, 2)
 
                 self.layout.addWidget(QLabel(day), i + add, 0)
 
                 for j in range(len(arr1[i])):
                     if flag:
-                        self.layout.addWidget(QLabel(arr1[i][j][0]), i + add, j + 2)
-                        self.layout.addWidget(QLabel(arr1[i][j][1]), i + add + 1, j + 2)
+                        self.layout.addWidget(QLabel(arr1[i][j][0]), i + add, j + 3)
+                        self.layout.addWidget(QLabel(arr1[i][j][1]), i + add + 1, j + 3)
                         add_flag = 1
 
                     else:
-                        self.layout.addWidget(QLabel(arr1[i][j][0]), i + add, j + 2)
+                        self.layout.addWidget(QLabel(arr1[i][j][0]), i + add, j + 3)
+                        self.layout.addWidget(QLabel(str(pair_num)), i + add, 1)
+                pair_num += 1
                 if add_flag:  # увеличиваем добавку если есть числитель и знаменатель
                     add += 2
         return add + len(arr1)
@@ -102,6 +111,10 @@ class MyWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
     window = MyWindow()
     window.show()
     app.exec()
