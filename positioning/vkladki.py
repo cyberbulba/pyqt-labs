@@ -1,5 +1,7 @@
 import sys
 
+from PySide6.QtCore import QRegularExpression
+from PySide6.QtGui import QValidator, QRegularExpressionValidator
 from PySide6.QtWidgets import QCheckBox
 from PySide6.QtWidgets import QFormLayout, QLineEdit
 from PySide6.QtWidgets import QGridLayout
@@ -64,9 +66,16 @@ class MyWindow(QMainWindow):
         form_layout = QFormLayout(self.tab2)
         self.layout2.addLayout(form_layout)
 
-        form_layout.addRow("Фамилия:", QLineEdit())
-        form_layout.addRow("Имя:", QLineEdit())
-        form_layout.addRow("Отчество:", QLineEdit())
+
+
+        validator = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
+
+        names = ["Фамилия", "Имя", "Отчество"]
+        for name in names:
+            name_line_Edit = QLineEdit()
+            form_layout.addRow(name, name_line_Edit)
+            name_line_Edit.setValidator(validator)
+
         form_layout.addRow("Почта:", QLineEdit())
         form_layout.addRow("Телефон:", QLineEdit())
 
@@ -80,7 +89,13 @@ class MyWindow(QMainWindow):
         form_layout.addRow(QCheckBox("Я согласен(а) на обработку персональных данных"))
         form_layout.addRow(QCheckBox("Я согласен(а) на получение рассылок по почте"))
 
+        self.button = QPushButton("Зарегестрироваться")
+        form_layout.addRow(self.button)
 
+
+    @Slot()
+    def validate_form(self):
+        pass
 
 
     def add_day(self, day, arr1, add):  # переменная добавки на случай, если пара делится на числитель и знаменатель
