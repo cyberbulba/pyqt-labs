@@ -1,5 +1,7 @@
 import sys
 
+from PySide6.QtWidgets import QCheckBox
+from PySide6.QtWidgets import QFormLayout, QLineEdit
 from PySide6.QtWidgets import QGridLayout
 from PySide6.QtWidgets import QTabWidget
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit
@@ -57,6 +59,29 @@ class MyWindow(QMainWindow):
 
         add = self.add_day("Понедельник", arr1, 1)
         self.add_day("Вторник", arr2, add)
+
+        self.layout2 = QVBoxLayout()
+        form_layout = QFormLayout(self.tab2)
+        self.layout2.addLayout(form_layout)
+
+        form_layout.addRow("Фамилия:", QLineEdit())
+        form_layout.addRow("Имя:", QLineEdit())
+        form_layout.addRow("Отчество:", QLineEdit())
+        form_layout.addRow("Почта:", QLineEdit())
+        form_layout.addRow("Телефон:", QLineEdit())
+
+        form_layout.addRow(QLabel("Выберите интересные Вам темы:"))
+
+        items = ["Видеокарты", "Процессоры", "БП", "ОЗУ", "Диски", "Мат. платы"]
+        for item in items:
+            form_layout.addRow(QCheckBox(item))
+
+        form_layout.addRow(QLabel("Согласны ли Вы на обработку ваших данных?"))
+        form_layout.addRow(QCheckBox("Я согласен(а) на обработку персональных данных"))
+        form_layout.addRow(QCheckBox("Я согласен(а) на получение рассылок по почте"))
+
+
+
 
     def add_day(self, day, arr1, add):  # переменная добавки на случай, если пара делится на числитель и знаменатель
         pair_num = 1
