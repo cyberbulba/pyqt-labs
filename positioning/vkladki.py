@@ -66,18 +66,25 @@ class MyWindow(QMainWindow):
         form_layout = QFormLayout(self.tab2)
         self.layout2.addLayout(form_layout)
 
-
-
-        validator = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
+        validator_names = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
 
         names = ["Фамилия", "Имя", "Отчество"]
         for name in names:
             name_line_Edit = QLineEdit()
             form_layout.addRow(name, name_line_Edit)
-            name_line_Edit.setValidator(validator)
+            name_line_Edit.setValidator(validator_names)
 
-        form_layout.addRow("Почта:", QLineEdit())
-        form_layout.addRow("Телефон:", QLineEdit())
+        validator_email = QRegularExpressionValidator(
+            QRegularExpression("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"))
+        email_line_edit = QLineEdit()
+        form_layout.addRow("Почта:", email_line_edit)
+        email_line_edit.setValidator(validator_email)
+
+        validator_number = QRegularExpressionValidator(
+            QRegularExpression("^(\\+7|8)\\d{10}$"))
+        number_line_edit = QLineEdit()
+        form_layout.addRow("Телефон (без ввода дефисов):", number_line_edit)
+        number_line_edit.setValidator(validator_number)
 
         form_layout.addRow(QLabel("Выберите интересные Вам темы:"))
 
@@ -86,17 +93,18 @@ class MyWindow(QMainWindow):
             form_layout.addRow(QCheckBox(item))
 
         form_layout.addRow(QLabel("Согласны ли Вы на обработку ваших данных?"))
-        form_layout.addRow(QCheckBox("Я согласен(а) на обработку персональных данных"))
+        self.personal_data = QCheckBox("Я согласен(а) на обработку персональных данных")
+        form_layout.addRow(self.personal_data)
         form_layout.addRow(QCheckBox("Я согласен(а) на получение рассылок по почте"))
 
         self.button = QPushButton("Зарегестрироваться")
         form_layout.addRow(self.button)
-
+        self.button.clicked.connect(self.validate_form)
 
     @Slot()
     def validate_form(self):
-        pass
-
+        if not self.personal_data.isChecked():
+            print("Еблан")
 
     def add_day(self, day, arr1, add):  # переменная добавки на случай, если пара делится на числитель и знаменатель
         pair_num = 1
