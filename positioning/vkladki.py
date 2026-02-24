@@ -66,25 +66,27 @@ class MyWindow(QMainWindow):
         form_layout = QFormLayout(self.tab2)
         self.layout2.addLayout(form_layout)
 
-        validator_names = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
+        self.validator_names = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
 
         names = ["Фамилия", "Имя", "Отчество"]
+        self.name_line_edits = []
         for name in names:
-            name_line_Edit = QLineEdit()
-            form_layout.addRow(name, name_line_Edit)
-            name_line_Edit.setValidator(validator_names)
+            name_line_edit = QLineEdit()
+            self.name_line_edits.append(name_line_edit)
+            form_layout.addRow(name, name_line_edit)
+            name_line_edit.setValidator(self.validator_names)
 
-        validator_email = QRegularExpressionValidator(
+        self.validator_email = QRegularExpressionValidator(
             QRegularExpression("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"))
-        email_line_edit = QLineEdit()
-        form_layout.addRow("Почта:", email_line_edit)
-        email_line_edit.setValidator(validator_email)
+        self.email_line_edit = QLineEdit()
+        form_layout.addRow("Почта:", self.email_line_edit)
+        self.email_line_edit.setValidator(self.validator_email)
 
-        validator_number = QRegularExpressionValidator(
+        self.validator_number = QRegularExpressionValidator(
             QRegularExpression("^(\\+7|8)\\d{10}$"))
-        number_line_edit = QLineEdit()
-        form_layout.addRow("Телефон (без ввода дефисов):", number_line_edit)
-        number_line_edit.setValidator(validator_number)
+        self.number_line_edit = QLineEdit()
+        form_layout.addRow("Телефон (без ввода дефисов):", self.number_line_edit)
+        self.number_line_edit.setValidator(self.validator_number)
 
         form_layout.addRow(QLabel("Выберите интересные Вам темы:"))
 
@@ -101,10 +103,38 @@ class MyWindow(QMainWindow):
         form_layout.addRow(self.button)
         self.button.clicked.connect(self.validate_form)
 
+        self.error_text = QTextEdit()
+        form_layout.addRow(self.error_text)
+
     @Slot()
     def validate_form(self):
+        error_string = ''
         if not self.personal_data.isChecked():
-            print("Еблан")
+            error_string += "Вы не согласны на обработку данных!\n"
+
+        state_num, _, _ = self.validator_number.validate(self.number_line_edit.text(), 0)
+        state_email, _, _ = self.validator_email.validate(self.email_line_edit.text(), 0)
+        state_family, _, _ = self.validator_names.validate(self.name_line_edits[0].text(), 0)
+        state_name, _, _ = self.validator_names.validate(self.name_line_edits[1].text(), 0)
+        state_fathername, _, _ = self.validator_names.validate(self.name_line_edits[2].text(), 0)
+
+        if state_num != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильный номер телефона!\n"
+
+        if state_email != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильная почта!\n"
+
+        if state_family != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильная фамилия!\n"
+
+        if state_name != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильное имя!\n"
+
+        if state_fathername != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильное отчество!\n"
+
+        self.error_text.setText(error_string)
+        print(error_string)
 
     def add_day(self, day, arr1, add):  # переменная добавки на случай, если пара делится на числитель и знаменатель
         pair_num = 1
