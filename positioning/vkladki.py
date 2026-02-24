@@ -106,6 +106,14 @@ class MyWindow(QMainWindow):
         self.error_text = QTextEdit()
         form_layout.addRow(self.error_text)
 
+    def mousePressEvent(self, event):
+        if self.tabs.currentIndex() == 2 and event.position().y() < self.height // 2:
+            if event.button() == Qt.MouseButton.LeftButton:
+                self.move_label = QLabel(self.tab3)
+                self.move_label.setText("Hello world!")
+                self.move_label.show()
+                self.move_label.move(event.position().x(), event.position().y())
+
     @Slot()
     def validate_form(self):
         error_string = ''
