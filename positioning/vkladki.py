@@ -1,5 +1,7 @@
 import sys
 
+from PyQt6.QtCore import QMimeData
+from PySide6.QtGui import QDrag
 from PySide6.QtCore import QRegularExpression
 from PySide6.QtGui import QValidator, QRegularExpressionValidator
 from PySide6.QtWidgets import QCheckBox
@@ -16,6 +18,9 @@ from PySide6.QtCore import Slot
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.widget_flag = 0
+        self.move_widget = None
+        self.dragging = 0
         self.initUI()
 
     def initUI(self):
@@ -107,12 +112,23 @@ class MyWindow(QMainWindow):
         form_layout.addRow(self.error_text)
 
     def mousePressEvent(self, event):
-        if self.tabs.currentIndex() == 2 and event.position().y() < self.height // 2:
-            if event.button() == Qt.MouseButton.LeftButton:
-                self.move_label = QLabel(self.tab3)
-                self.move_label.setText("Hello world!")
-                self.move_label.show()
-                self.move_label.move(event.position().x(), event.position().y())
+        if event.button() == Qt.MouseButton.LeftButton:
+            if self.tabs.currentIndex() == 2 and event.position().y() < self.height // 2:
+                if self.widget_flag == 0:
+                    self.move_label = QLabel(self.tab3)
+                    self.move_label.setText("Hello world!")
+                    self.move_label.show()
+                    self.move_label.move(int(event.position().x()), int(event.position().y()))
+                    self.widget_flag = 1
+                    self.dragging = 1
+
+    def mouseMoveEvent(self, event):
+        if self.dragging:
+            self.move_label.move(int(event.position().x()), int(event.position().y()))
+
+    def mouseReleaseEvent(self, event):
+        if self.dragging and event.position().y() > self.height // 2:
+            self.dragging = 0
 
     @Slot()
     def validate_form(self):
