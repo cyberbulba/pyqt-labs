@@ -20,6 +20,8 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.widget_flag = 0
         self.move_widget = None
+        self.x = 0
+        self.y = 0
         self.dragging = 0
         self.initUI()
 
@@ -119,6 +121,10 @@ class MyWindow(QMainWindow):
                     self.move_label.setText("Hello world!")
                     self.move_label.show()
                     self.move_label.move(int(event.position().x()), int(event.position().y()))
+
+                    self.x = int(event.position().x())
+                    self.y = int(event.position().y())
+
                     self.widget_flag = 1
                     self.dragging = 1
 
@@ -129,6 +135,8 @@ class MyWindow(QMainWindow):
     def mouseReleaseEvent(self, event):
         if self.dragging and event.position().y() > self.height // 2:
             self.dragging = 0
+        else:
+            self.move_label.move(self.x, self.y)
 
     @Slot()
     def validate_form(self):
