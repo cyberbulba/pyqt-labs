@@ -135,7 +135,8 @@ class MyWindow(QMainWindow):
     def mouseReleaseEvent(self, event):
         if self.dragging and event.position().y() > self.height // 2:
             self.dragging = 0
-        else:
+        elif self.move_label.pos().y() < self.height // 2:
+            self.dragging = 1
             self.move_label.move(self.x, self.y)
 
     @Slot()
