@@ -1,8 +1,6 @@
 import sys
 
 from PySide6.QtWidgets import QPushButton
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 
@@ -18,7 +16,7 @@ class MyWindow(QMainWindow):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
 
-        self.height = int(screen_geometry.height() * 0.2)
+        self.height = int(screen_geometry.height() * 0.5)
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)
@@ -30,7 +28,9 @@ class MyWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
 
-        self.create_text_label_1()  # создаём метки
+        self.label = QLabel()
+        self.layout.addWidget(self.label)
+        self.label.setText("Кнопка не нажата!")
 
         button = QPushButton("Нажми на меня!")
         self.layout.addWidget(button)
@@ -45,21 +45,13 @@ class MyWindow(QMainWindow):
     def swap_label_released(self):
         self.label.setText("Кнопка отпущена!")
 
-    def create_text_label_1(self):
-        self.label = QLabel()
-        self.label.setWordWrap(True)  # перенос слов в label'е
-        self.label.resize(self.height, self.height // 3)
-        font = QFont("Times New Roman", 14)
-        font.setItalic(True)
-        self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
-        self.label.setMargin(15)
-        self.layout.addWidget(self.label)
-        self.label.setText("Кнопка не нажата!")
-
 
 def main():
     app = QApplication(sys.argv)
+
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
     window = MyWindow()
     window.show()
     app.exec()
