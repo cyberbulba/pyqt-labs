@@ -14,11 +14,19 @@ class MyWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Калькулятор")
-        self.center_window()
+
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
+
+        self.height = int(screen_geometry.height() * 0.6)
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)
         self.setCentralWidget(self.central_widget)
+
+        window_geometry = self.frameGeometry()
+        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
+        self.move(window_geometry.topLeft())
 
         self.layout = QVBoxLayout(self.central_widget)
 
@@ -58,14 +66,6 @@ class MyWindow(QMainWindow):
 
         self.rez_label = QLabel()
         self.layout.addWidget(self.rez_label)
-
-    def center_window(self):
-        screen = QApplication.primaryScreen()
-        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
-        self.height = int(self.frameGeometry().height() * 0.9)
-        window_geometry = self.frameGeometry()
-        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
-        self.move(window_geometry.topLeft())
 
     @Slot()
     def plus(self):
