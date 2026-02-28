@@ -3,9 +3,7 @@ from PySide6.QtWidgets import QPushButton, QApplication, QLabel, QWidget, QMainW
 from PySide6.QtCore import Signal, Slot, QObject
 
 
-# Класс контроллера - выделен отдельно
 class ButtonController(QObject):
-    # Сигналы контроллера
     button_pressed = Signal()
     button_released = Signal()
 
@@ -13,7 +11,6 @@ class ButtonController(QObject):
         super().__init__()
         self.label = label
 
-        # Подключаем сигналы контроллера к обработчикам
         self.button_pressed.connect(self.handle_button_pressed)
         self.button_released.connect(self.handle_button_released)
 
@@ -58,15 +55,13 @@ class MyWindow(QMainWindow):
 
         self.label = QLabel()
         self.layout.addWidget(self.label)
-        self.label.setText("Отпущена")  # Исправлено на соответствие ТЗ
+        self.label.setText("Не нажата")
 
         button = QPushButton("Нажми на меня!")
         self.layout.addWidget(button)
 
-        # Создаем контроллер и передаем ему ссылку на метку
         self.controller = ButtonController(self.label)
 
-        # Подключаем сигналы кнопки к методам контроллера
         button.pressed.connect(self.controller.on_button_pressed)
         button.released.connect(self.controller.on_button_released)
 

@@ -4,5 +4,4 @@ QTextEdit {
     border-radius: 10px;
     font: bold 14px "Times New Roman";
     padding: 8px 20px;
-    text-align: center;
 }

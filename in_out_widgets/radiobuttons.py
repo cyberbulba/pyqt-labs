@@ -36,6 +36,7 @@ class MyWindow(QMainWindow):
         label.setText("Выберите время года:")
 
         self.text_edit = QTextEdit()
+        self.text_edit.setReadOnly(True)
         self.layout.addWidget(self.text_edit)
 
         self.radio_group = QButtonGroup()

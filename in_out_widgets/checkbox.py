@@ -53,16 +53,14 @@ class MyWindow(QMainWindow):
             self.checkbox_layout.addWidget(check_box)
             self.checkbox_layout.addWidget(spinBox)
 
-        button = QPushButton("Посчитать стоимость")
-        self.layout.addWidget(button)
+            check_box.toggled.connect(self.get_cost)
 
         self.label_res = QLabel()
         self.layout.addWidget(self.label_res)
 
         self.text_res = QTextEdit()
         self.layout.addWidget(self.text_res)
-
-        button.clicked.connect(self.get_cost)
+        self.text_res.setReadOnly(True)
 
     def handle_checkboxes(self):
         self.cost = 0
