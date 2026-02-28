@@ -6,15 +6,13 @@ from PySide6.QtCore import Signal, Slot, QObject, Qt
 
 # Модель калькулятора
 class CalculatorModel(QObject):
-    """Модель, реализующая бизнес-логику калькулятора"""
-    result_updated = Signal(str)  # Сигнал для обновления результата
-    error_occurred = Signal(str)  # Сигнал при возникновении ошибки
+    result_updated = Signal(str)
+    error_occurred = Signal(str)
 
     def __init__(self):
         super().__init__()
 
     def calculate(self, operation, num1, num2):
-        """Выполняет вычисления в зависимости от операции"""
         try:
             if operation == '+':
                 result = num1 + num2
@@ -28,7 +26,7 @@ class CalculatorModel(QObject):
             elif operation == '/':
                 if num2 == 0:
                     raise ValueError("Деление на ноль")
-                result = num1 // num2  # Целочисленное деление
+                result = num1 // num2
                 self.result_updated.emit(f"{num1} // {num2} = {result}")
             elif operation == '**':
                 result = num1 ** num2
@@ -39,11 +37,7 @@ class CalculatorModel(QObject):
             self.error_occurred.emit(str(e))
 
 
-# Контроллер калькулятора
 class CalculatorController(QObject):
-    """Контроллер, обрабатывающий пользовательские действия"""
-
-    # Сигнал для запроса выполнения операции
     operation_requested = Signal(str, int, int)
 
     def __init__(self, model, view):
@@ -51,14 +45,11 @@ class CalculatorController(QObject):
         self.model = model
         self.view = view
 
-        # Подключаем сигналы модели к виду
         self.model.result_updated.connect(self.view.update_result)
         self.model.error_occurred.connect(self.view.show_error)
 
-        # Подключаем сигналы контроллера к модели
         self.operation_requested.connect(self.model.calculate)
 
-        # Подключаем кнопки вида к контроллеру
         self.view.plus_button.clicked.connect(lambda: self.on_operation_clicked('+'))
         self.view.minus_button.clicked.connect(lambda: self.on_operation_clicked('-'))
         self.view.mult_button.clicked.connect(lambda: self.on_operation_clicked('*'))
@@ -67,7 +58,6 @@ class CalculatorController(QObject):
 
     @Slot()
     def on_operation_clicked(self, operation):
-        """Обработчик нажатия кнопки операции - генерирует сигнал через emit"""
         num1 = self.view.get_num1()
         num2 = self.view.get_num2()
 
@@ -75,7 +65,6 @@ class CalculatorController(QObject):
             self.model.error_occurred.emit("Введены неправильные числа!")
             return
 
-        # Генерируем сигнал через emit
         self.operation_requested.emit(operation, num1, num2)
 
 
@@ -85,12 +74,8 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.initUI()
 
-        # Создаем модель и контроллер
         self.model = CalculatorModel()
         self.controller = CalculatorController(self.model, self)
-
-        # Устанавливаем валидатор
-
 
     def initUI(self):
         self.setWindowTitle("Калькулятор")
@@ -121,7 +106,6 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.line_edit2)
         self.line_edit2.setValidator(self.validator)
 
-        # Кнопки
         self.plus_button = QPushButton("+")
         self.layout.addWidget(self.plus_button)
 
@@ -143,7 +127,6 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.rez_label)
 
     def get_num1(self):
-        """Получает первое число из поля ввода с проверкой валидности"""
         text = self.line_edit1.text()
         state, _, _ = self.validator.validate(text, 0)
         if state == QIntValidator.State.Acceptable:
@@ -151,7 +134,6 @@ class MyWindow(QMainWindow):
         return None
 
     def get_num2(self):
-        """Получает второе число из поля ввода с проверкой валидности"""
         text = self.line_edit2.text()
         state, _, _ = self.validator.validate(text, 0)
         if state == QIntValidator.State.Acceptable:
@@ -160,16 +142,13 @@ class MyWindow(QMainWindow):
 
     @Slot(str)
     def update_result(self, result_text):
-        """Обновляет отображение результата"""
         self.rez_label.setText(result_text)
 
     @Slot(str)
     def show_error(self, error_message):
-        """Отображает сообщение об ошибке"""
         self.rez_label.setText(error_message)
 
     def create_text_label(self, text):
-        """Создает метку с выравниванием по центру"""
         label = QLabel()
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(label)

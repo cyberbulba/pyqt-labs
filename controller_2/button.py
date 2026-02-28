@@ -16,11 +16,11 @@ class ButtonController(QObject):
 
     @Slot()
     def handle_button_pressed(self):
-        self.label.setText("Нажата")
+        self.label.setText("Кнопка нажата")
 
     @Slot()
     def handle_button_released(self):
-        self.label.setText("Отпущена")
+        self.label.setText("Кнопка отпущена")
 
     # Методы для генерации сигналов через emit
     def on_button_pressed(self):
