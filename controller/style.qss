@@ -13,9 +13,6 @@ QPushButton {
 }
 
 QLineEdit {
-    border-style: outset;
-    border-width: 2px;
-    border-radius: 10px;
-    font: bold 14px "Times New Roman";
+    font: 14px "Times New Roman";
     padding: 10 px;
 }
