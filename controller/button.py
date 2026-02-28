@@ -12,19 +12,11 @@ class MyWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Кнопка")
-
-        screen = QApplication.primaryScreen()
-        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
-
-        self.height = int(screen_geometry.height() * 0.5)
+        self.center_window()
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)
         self.setCentralWidget(self.central_widget)
-
-        window_geometry = self.frameGeometry()
-        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
-        self.move(window_geometry.topLeft())
 
         self.layout = QVBoxLayout(self.central_widget)
 
@@ -36,6 +28,14 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(button)
         button.pressed.connect(self.swap_label_pressed)
         button.released.connect(self.swap_label_released)
+
+    def center_window(self):
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
+        self.height = int(self.frameGeometry().height() * 0.5)
+        window_geometry = self.frameGeometry()
+        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
+        self.move(window_geometry.topLeft())
 
     @Slot()
     def swap_label_pressed(self):

@@ -1,8 +1,8 @@
 import sys
 
-from PySide6.QtWidgets import QPushButton, QSpinBox, QLineEdit
+from PySide6.QtGui import QIntValidator, QRegularExpressionValidator
+from PySide6.QtWidgets import QPushButton, QLineEdit
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 
@@ -14,29 +14,25 @@ class MyWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Калькулятор")
-
-        screen = QApplication.primaryScreen()
-        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
-
-        self.height = int(screen_geometry.height() * 0.8)
+        self.center_window()
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)
         self.setCentralWidget(self.central_widget)
 
-        window_geometry = self.frameGeometry()
-        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
-        self.move(window_geometry.topLeft())
-
         self.layout = QVBoxLayout(self.central_widget)
+
+        self.validator = QIntValidator(self)
 
         self.create_text_label("Введите первое число:")
         self.line_edit1 = QLineEdit()
         self.layout.addWidget(self.line_edit1)
+        self.line_edit1.setValidator(self.validator)
 
         self.create_text_label("Введите второе число:")
         self.line_edit2 = QLineEdit()
         self.layout.addWidget(self.line_edit2)
+        self.line_edit2.setValidator(self.validator)
 
         button1 = QPushButton("+")
         self.layout.addWidget(button1)
@@ -63,6 +59,14 @@ class MyWindow(QMainWindow):
         self.rez_label = QLabel()
         self.layout.addWidget(self.rez_label)
 
+    def center_window(self):
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
+        self.height = int(self.frameGeometry().height() * 0.9)
+        window_geometry = self.frameGeometry()
+        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
+        self.move(window_geometry.topLeft())
+
     @Slot()
     def plus(self):
         self.rez_label.setText("")
@@ -70,7 +74,11 @@ class MyWindow(QMainWindow):
         text1 = self.line_edit1.text()
         text2 = self.line_edit2.text()
 
-        if text1.isdigit() and text2.isdigit():
+        state_num1, _, _ = self.validator.validate(text1, 0)
+        state_num2, _, _ = self.validator.validate(text2, 0)
+
+        if (state_num1 == QRegularExpressionValidator.State.Acceptable and
+                state_num2 == QRegularExpressionValidator.State.Acceptable):
             self.rez_label.setText(f"{text1} + {text2} = {int(text1) + int(text2)}")
         else:
             self.rez_label.setText("Введены неправильные числа!")
@@ -82,7 +90,11 @@ class MyWindow(QMainWindow):
         text1 = self.line_edit1.text()
         text2 = self.line_edit2.text()
 
-        if text1.isdigit() and text2.isdigit():
+        state_num1, _, _ = self.validator.validate(text1, 0)
+        state_num2, _, _ = self.validator.validate(text2, 0)
+
+        if (state_num1 == QRegularExpressionValidator.State.Acceptable and
+                state_num2 == QRegularExpressionValidator.State.Acceptable):
             self.rez_label.setText(f"{text1} - {text2} = {int(text1) - int(text2)}")
         else:
             self.rez_label.setText("Введены неправильные числа!")
@@ -94,7 +106,11 @@ class MyWindow(QMainWindow):
         text1 = self.line_edit1.text()
         text2 = self.line_edit2.text()
 
-        if text1.isdigit() and text2.isdigit():
+        state_num1, _, _ = self.validator.validate(text1, 0)
+        state_num2, _, _ = self.validator.validate(text2, 0)
+
+        if (state_num1 == QRegularExpressionValidator.State.Acceptable and
+                state_num2 == QRegularExpressionValidator.State.Acceptable):
             self.rez_label.setText(f"{text1} * {text2} = {int(text1) * int(text2)}")
         else:
             self.rez_label.setText("Введены неправильные числа!")
@@ -106,7 +122,11 @@ class MyWindow(QMainWindow):
         text1 = self.line_edit1.text()
         text2 = self.line_edit2.text()
 
-        if text1.isdigit() and text2.isdigit():
+        state_num1, _, _ = self.validator.validate(text1, 0)
+        state_num2, _, _ = self.validator.validate(text2, 0)
+
+        if (state_num1 == QRegularExpressionValidator.State.Acceptable and
+            state_num2 == QRegularExpressionValidator.State.Acceptable) and text2 != "0":
             self.rez_label.setText(f"{text1} // {text2} = {int(text1) / int(text2)}")
         else:
             self.rez_label.setText("Введены неправильные числа!")
@@ -118,7 +138,10 @@ class MyWindow(QMainWindow):
         text1 = self.line_edit1.text()
         text2 = self.line_edit2.text()
 
-        if text1.isdigit() and text2.isdigit():
+        state_num1, _, _ = self.validator.validate(text1, 0)
+        state_num2, _, _ = self.validator.validate(text2, 0)
+
+        if state_num1 == QRegularExpressionValidator.State.Acceptable and state_num2 == QRegularExpressionValidator.State.Acceptable:
             self.rez_label.setText(f"{text1}<sup>{text2}</sup> = {int(text1) ** int(text2)}")
         else:
             self.rez_label.setText("Введены неправильные числа!")

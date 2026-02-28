@@ -1,8 +1,6 @@
 import sys
 
 from PySide6.QtWidgets import QPushButton
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 
@@ -15,23 +13,17 @@ class MyWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Счётчик")
-
-        screen = QApplication.primaryScreen()
-        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
-
-        self.height = int(screen_geometry.height() * 0.2)
+        self.center_window()
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)
         self.setCentralWidget(self.central_widget)
 
-        window_geometry = self.frameGeometry()
-        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
-        self.move(window_geometry.topLeft())
-
         self.layout = QVBoxLayout(self.central_widget)
 
-        self.create_text_label_1()  # создаём метки
+        self.label = QLabel()
+        self.layout.addWidget(self.label)
+        self.label.setText(f'{self.count}')
 
         button1 = QPushButton("Увеличить число")
         self.layout.addWidget(button1)
@@ -40,6 +32,14 @@ class MyWindow(QMainWindow):
         button2 = QPushButton("Обнулить счётчик")
         self.layout.addWidget(button2)
         button2.clicked.connect(self.count_clear)
+
+    def center_window(self):
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
+        self.height = int(self.frameGeometry().height() * 0.5)
+        window_geometry = self.frameGeometry()
+        window_geometry.moveCenter(screen_geometry.center())  # перемещаем окно в центр
+        self.move(window_geometry.topLeft())
 
     @Slot()
     def count_up(self):
@@ -51,21 +51,13 @@ class MyWindow(QMainWindow):
         self.count = 0
         self.label.setText(f"{self.count}")
 
-    def create_text_label_1(self):
-        self.label = QLabel()
-        self.label.setWordWrap(True)  # перенос слов в label'е
-        self.label.resize(self.height, self.height // 3)
-        font = QFont("Times New Roman", 14)
-        font.setItalic(True)
-        self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
-        self.label.setMargin(15)
-        self.layout.addWidget(self.label)
-        self.label.setText(f'{self.count}')
-
 
 def main():
     app = QApplication(sys.argv)
+
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
     window = MyWindow()
     window.show()
     app.exec()
