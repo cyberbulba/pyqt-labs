@@ -111,30 +111,34 @@ class MyWindow(QMainWindow):
         self.error_text.setReadOnly(True)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            if self.tabs.currentIndex() == 2 and event.position().y() < self.height // 2:
-                if self.widget_flag == 0:
-                    self.move_label = QLabel(self.tab3)
-                    self.move_label.setText("Hello world!")
-                    self.move_label.show()
-                    self.move_label.move(int(event.position().x()), int(event.position().y()))
+        if self.tabs.currentIndex() == 2:
+            if event.button() == Qt.MouseButton.LeftButton:
+                if event.position().y() < self.height // 2:
+                    if self.widget_flag == 0:
+                        self.move_label = QLabel(self.tab3)
+                        self.move_label.setText("Hello world!")
+                        self.move_label.show()
+                        self.move_label.move(int(event.position().x()), int(event.position().y()))
 
-                    self.x = int(event.position().x())
-                    self.y = int(event.position().y())
+                        self.x = int(event.position().x())
+                        self.y = int(event.position().y())
 
-                    self.widget_flag = 1
-                    self.dragging = 1
+                        self.widget_flag = 1
+                        self.dragging = 1
 
     def mouseMoveEvent(self, event):
         if self.dragging:
             self.move_label.move(int(event.position().x()), int(event.position().y()))
 
     def mouseReleaseEvent(self, event):
-        if self.dragging and event.position().y() > self.height // 2:
-            self.dragging = 0
-        elif self.move_label.pos().y() < self.height // 2:
-            self.dragging = 1
-            self.move_label.move(self.x, self.y)
+        if self.tabs.currentIndex() == 2:
+            if self.dragging:
+                if event.position().y() > self.height // 2:
+                    self.dragging = 0
+            else:
+                if self.move_label.pos().y() < self.height // 2:
+                    self.dragging = 1
+                    self.move_label.move(self.x, self.y)
 
     @Slot()
     def validate_form(self):
@@ -163,7 +167,10 @@ class MyWindow(QMainWindow):
         if state_fathername != QRegularExpressionValidator.State.Acceptable:
             error_string += "Неправильное отчество!\n"
 
-        self.error_text.setText(error_string)
+        if not error_string:
+            self.error_text.setText("Успешная регистрация!")
+        else:
+            self.error_text.setText(error_string)
 
     def add_day(self, day, schedule, row_offset):
         pair_num = 1
