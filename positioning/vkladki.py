@@ -142,6 +142,7 @@ class MyWindow(QMainWindow):
                             self.move_label.move(int(event.position().x()), int(event.position().y()))
 
                             self.widget_flag = 1
+
     @Slot()
     def validate_form(self):
         error_string = ''
