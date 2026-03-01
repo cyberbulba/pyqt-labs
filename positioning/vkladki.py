@@ -134,13 +134,14 @@ class MyWindow(QMainWindow):
         if self.tabs.currentIndex() == 2:
             if event.button() == Qt.MouseButton.LeftButton:
                 if self.widget_flag == 0:
-                    self.move_label = DragLabel(self.tab3)
-                    self.move_label.setText("Hello world")
-                    self.move_label.show()
-                    self.move_label.move(int(event.position().x()), int(event.position().y()))
+                    if event.position().y() < self.height // 2:
+                        if self.widget_flag == 0:
+                            self.move_label = DragLabel(self.tab3)
+                            self.move_label.setText("Hello world")
+                            self.move_label.show()
+                            self.move_label.move(int(event.position().x()), int(event.position().y()))
 
-                    self.widget_flag = 1
-
+                            self.widget_flag = 1
     @Slot()
     def validate_form(self):
         error_string = ''
