@@ -1,14 +1,13 @@
 import sys
 
 from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QValidator, QRegularExpressionValidator
+from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtWidgets import QCheckBox
 from PySide6.QtWidgets import QFormLayout, QLineEdit
 from PySide6.QtWidgets import QGridLayout
 from PySide6.QtWidgets import QTabWidget
-from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit
+from PySide6.QtWidgets import QPushButton, QTextEdit
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 
@@ -17,14 +16,13 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.widget_flag = 0
-        self.move_widget = None
         self.x = 0
         self.y = 0
         self.dragging = 0
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Расписание ИВТ")
+        self.setWindowTitle("Вкладки")
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
@@ -110,6 +108,7 @@ class MyWindow(QMainWindow):
 
         self.error_text = QTextEdit()
         form_layout.addRow(self.error_text)
+        self.error_text.setReadOnly(True)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -165,57 +164,47 @@ class MyWindow(QMainWindow):
             error_string += "Неправильное отчество!\n"
 
         self.error_text.setText(error_string)
-        print(error_string)
 
-    def add_day(self, day, arr1, add):  # переменная добавки на случай, если пара делится на числитель и знаменатель
+    def add_day(self, day, schedule, row_offset):
         pair_num = 1
-        for i in range(len(arr1)):
-            add_flag = 0
-            flag = 0
-            if len(arr1[i]) == 1:
-                self.layout.addWidget(QLabel(arr1[i][0]), i + add, 3, 1, 2)
-                self.layout.addWidget(QLabel("Числитель + знаменатель"), i + add, 2)
-                self.layout.addWidget(QLabel(day), i + add, 0)
-                self.layout.addWidget(QLabel(str(pair_num)), i + add, 1)
+        current_row = row_offset
+
+        for pair in schedule:
+            is_common_pair = len(pair) == 1  # тип пары
+            has_numerator_denominator = len(pair) > 1 and len(pair[0]) == 2
+
+            if is_common_pair: # случай где 1 пара на 2 потока
+                self.layout.addWidget(QLabel(day), current_row, 0)
+                self.layout.addWidget(QLabel(str(pair_num)), current_row, 1)
+                self.layout.addWidget(QLabel("Числитель + знаменатель"), current_row, 2)
+                self.layout.addWidget(QLabel(pair[0]), current_row, 3, 1, 2)
+
+                current_row += 1
                 pair_num += 1
 
-            else:
-                if len(arr1[i][0]) == 2:  # случай с числителем и знаменателем
-                    self.layout.addWidget(QLabel("Числитель"), i + add, 2)
-                    self.layout.addWidget(QLabel("Знаменатель"), i + add + 1, 2)
-                    self.layout.addWidget(QLabel(day), i + add + 1, 0)
-                    self.layout.addWidget(QLabel(str(pair_num)), i + add, 1)
-                    self.layout.addWidget(QLabel(str(pair_num)), i + add + 1, 1)
-                    flag = 1
+            elif has_numerator_denominator: # случай где пара с числителем или знаменателем на 1 группу
+                for j, subject in enumerate(pair):
+                    self.layout.addWidget(QLabel(day), current_row, 0)
+                    self.layout.addWidget(QLabel(str(pair_num)), current_row, 1)
+                    self.layout.addWidget(QLabel("Числитель" if j == 0 else "Знаменатель"), current_row, 2)
+                    self.layout.addWidget(QLabel(subject[0]), current_row, 3)
+                    self.layout.addWidget(QLabel(subject[1]), current_row, 4)
+                    current_row += 1
 
-                else:
-                    self.layout.addWidget(QLabel("Числитель + знаменатель"), i + add, 2)
-
-                self.layout.addWidget(QLabel(day), i + add, 0)
-
-                for j in range(len(arr1[i])):
-                    if flag:
-                        self.layout.addWidget(QLabel(arr1[i][j][0]), i + add, j + 3)
-                        self.layout.addWidget(QLabel(arr1[i][j][1]), i + add + 1, j + 3)
-                        add_flag = 1
-
-                    else:
-                        self.layout.addWidget(QLabel(arr1[i][j][0]), i + add, j + 3)
-                        self.layout.addWidget(QLabel(str(pair_num)), i + add, 1)
                 pair_num += 1
-                if add_flag:  # увеличиваем добавку если есть числитель и знаменатель
-                    add += 2
-        return add + len(arr1)
 
-        # self.layout = QVBoxLayout(self.central_widget)
-        #
-        # label = QLabel()
-        # label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
-        # self.layout.addWidget(label)
-        # label.setText("Выберите время года:")
-        #
-        # self.text_edit = QTextEdit()
-        # self.layout.addWidget(self.text_edit)
+            else: # пара на 1 группу с числителем и знаменателем
+                self.layout.addWidget(QLabel(day), current_row, 0)
+                self.layout.addWidget(QLabel(str(pair_num)), current_row, 1)
+                self.layout.addWidget(QLabel("Числитель + знаменатель"), current_row, 2)
+
+                for j, subject in enumerate(pair):
+                    self.layout.addWidget(QLabel(subject[0]), current_row, j + 3)
+
+                current_row += 1
+                pair_num += 1
+
+        return current_row
 
 
 def main():
