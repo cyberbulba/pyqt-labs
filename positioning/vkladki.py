@@ -1,7 +1,7 @@
 import sys
 
-from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QRegularExpressionValidator
+from PySide6.QtCore import QRegularExpression, QMimeData, QPoint
+from PySide6.QtGui import QRegularExpressionValidator, QDrag
 from PySide6.QtWidgets import QCheckBox
 from PySide6.QtWidgets import QFormLayout, QLineEdit
 from PySide6.QtWidgets import QGridLayout
@@ -12,13 +12,20 @@ from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxL
 from PySide6.QtCore import Slot
 
 
+class DragLabel(QLabel):
+    def mouseMoveEvent(self, e):
+        if e.buttons() == Qt.LeftButton:
+            drag = QDrag(self)
+            drag.setMimeData(QMimeData())
+            drag.exec(Qt.MoveAction)
+
+
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.widget_flag = 0
-        self.x = 0
-        self.y = 0
-        self.dragging = 0
+        self.move_flag = 0
+        self.drag_offset = QPoint(0, 0)
         self.initUI()
 
     def initUI(self):
@@ -109,36 +116,31 @@ class MyWindow(QMainWindow):
         self.error_text = QTextEdit()
         form_layout.addRow(self.error_text)
         self.error_text.setReadOnly(True)
+        self.tab3.setAcceptDrops(True)
+
+    def dragEnterEvent(self, e):
+        e.accept()
+
+    def dropEvent(self, e):
+        pos = e.position()
+
+        if pos.y() > self.height // 2 and self.move_flag == 0:
+            self.move_label.move(pos.x(), pos.y())
+            self.move_flag = 1
+
+        e.accept()
 
     def mousePressEvent(self, event):
         if self.tabs.currentIndex() == 2:
             if event.button() == Qt.MouseButton.LeftButton:
                 if event.position().y() < self.height // 2:
                     if self.widget_flag == 0:
-                        self.move_label = QLabel(self.tab3)
-                        self.move_label.setText("Hello world!")
+                        self.move_label = DragLabel(self.tab3)
+                        self.move_label.setText("Hello world")
                         self.move_label.show()
                         self.move_label.move(int(event.position().x()), int(event.position().y()))
 
-                        self.x = int(event.position().x())
-                        self.y = int(event.position().y())
-
                         self.widget_flag = 1
-                        self.dragging = 1
-
-    def mouseMoveEvent(self, event):
-        if self.dragging:
-            self.move_label.move(int(event.position().x()), int(event.position().y()))
-
-    def mouseReleaseEvent(self, event):
-        if self.tabs.currentIndex() == 2:
-            if self.dragging:
-                if event.position().y() > self.height // 2:
-                    self.dragging = 0
-            else:
-                if self.move_label.pos().y() < self.height // 2:
-                    self.dragging = 1
-                    self.move_label.move(self.x, self.y)
 
     @Slot()
     def validate_form(self):
@@ -180,7 +182,7 @@ class MyWindow(QMainWindow):
             is_common_pair = len(pair) == 1  # тип пары
             has_numerator_denominator = len(pair) > 1 and len(pair[0]) == 2
 
-            if is_common_pair: # случай где 1 пара на 2 потока
+            if is_common_pair:  # случай где 1 пара на 2 потока
                 self.layout.addWidget(QLabel(day), current_row, 0)
                 self.layout.addWidget(QLabel(str(pair_num)), current_row, 1)
                 self.layout.addWidget(QLabel("Числитель + знаменатель"), current_row, 2)
@@ -189,7 +191,7 @@ class MyWindow(QMainWindow):
                 current_row += 1
                 pair_num += 1
 
-            elif has_numerator_denominator: # случай где пара с числителем или знаменателем на 1 группу
+            elif has_numerator_denominator:  # случай где пара с числителем или знаменателем на 1 группу
                 for j, subject in enumerate(pair):
                     self.layout.addWidget(QLabel(day), current_row, 0)
                     self.layout.addWidget(QLabel(str(pair_num)), current_row, 1)
@@ -200,7 +202,7 @@ class MyWindow(QMainWindow):
 
                 pair_num += 1
 
-            else: # пара на 1 группу с числителем и знаменателем
+            else:  # пара на 1 группу с числителем и знаменателем
                 self.layout.addWidget(QLabel(day), current_row, 0)
                 self.layout.addWidget(QLabel(str(pair_num)), current_row, 1)
                 self.layout.addWidget(QLabel("Числитель + знаменатель"), current_row, 2)
