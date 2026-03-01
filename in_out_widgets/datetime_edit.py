@@ -46,6 +46,7 @@ class MyWindow(QMainWindow):
 
         self.text_edit = QTextEdit()
         self.layout.addWidget(self.text_edit)
+        self.text_edit.setReadOnly(True)
 
         self.dateTimeEdit.dateTimeChanged.connect(self.handle_date)
 
