@@ -16,7 +16,7 @@ class MyWindow(QMainWindow):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
 
-        self.height = int(screen_geometry.height() * 0.2)
+        self.height = int(screen_geometry.height() * 0.4)
 
         self.central_widget = QWidget()
         self.central_widget.setFixedSize(self.height, self.height)

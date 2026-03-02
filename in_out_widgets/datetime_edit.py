@@ -62,9 +62,9 @@ class MyWindow(QMainWindow):
             hours = round(s // 3600)
             years = round(s // (3600 * 24 * 365))
 
-            self.text_edit.setText(f'Вы живёте полных лет: {years} \nили {hours} часов \nили {s} секунд')
+            self.text_edit.setMarkdown(f'*Вы живёте полных лет: {years} \nили {hours} часов \nили {s} секунд*')
         else:
-            self.text_edit.setText('Вы ввели неправильную дату!')
+            self.text_edit.setMarkdown('*Вы ввели неправильную дату!*')
 
 
 def main():
