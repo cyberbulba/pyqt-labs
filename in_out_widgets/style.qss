@@ -1,5 +1,5 @@
 QTextEdit {
-    border-style: outset;
+    border-style: solid;
     border-width: 2px;
     border-radius: 10px;
     font: bold 14px "Times New Roman";
