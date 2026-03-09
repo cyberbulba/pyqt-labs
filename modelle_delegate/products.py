@@ -15,7 +15,6 @@ class TableModel(QAbstractTableModel):
     def __init__(self):
         super(TableModel, self).__init__()
         self.__note_list = self.__create_default_data()
-        self.count = 0
 
     def __create_default_data(self):
         return [Product("Виноград", 2, 2),
@@ -55,10 +54,18 @@ class TableModel(QAbstractTableModel):
                 return 0
         return None
 
+    def headerData(self, col, orientation, role):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            headers = ["Название", "Количество, шт", "Масса, кг"]
+            if col < len(headers):
+                return headers[col]
+        return None
+
     def get_all_weights_of_table(self):
-        self.count = 0
+        count = 0
         for item in self.__note_list:
-            self.count += item.get_all_weights()
+            count += item.get_all_weights()
+        return count
 
 
 class MyWindow(QMainWindow):
@@ -105,8 +112,10 @@ class MyWindow(QMainWindow):
         button = QPushButton("Ввести заметку")
         self.layout.addWidget(button)
 
+        self.cost_widget = QLabel(f"Итого: {self.model.get_all_weights_of_table()} кг")
+        self.layout.addWidget(self.cost_widget)
+
         button.clicked.connect(self.handle_button)
-        view.clicked.connect(self.click_on_note)
 
     def handle_button(self):
         text = self.lineEdit.text()
@@ -118,8 +127,7 @@ class MyWindow(QMainWindow):
             self.spinbox_num.clear()
             self.spinbox_weight.clear()
 
-    def click_on_note(self, modelIndex):
-        self.model.removeRow(modelIndex.row())
+            self.cost_widget.setText(f'Итого: {self.model.get_all_weights_of_table()} кг')
 
 
 def main():
