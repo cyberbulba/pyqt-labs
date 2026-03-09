@@ -1,16 +1,27 @@
 import sys
 
-from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit
+from PySide6.QtCore import QAbstractTableModel
+from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QTableView, \
+    QSpinBox
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 
+from modelle_delegate.product import Product
 
-class ListModel(QAbstractListModel):
+
+class TableModel(QAbstractTableModel):
     def __init__(self):
-        super(ListModel, self).__init__()
-        self.__note_list = []
+        super(TableModel, self).__init__()
+        self.__note_list = self.__create_default_data()
+        self.count = 0
+
+    def __create_default_data(self):
+        return [Product("Виноград", 2, 2),
+                Product("Сливы", 2, 2),
+                Product("Яблоки зелёные", 2, 2),
+                Product("Бананы", 2, 2)]
 
     def rowCount(self, parent=None):
         return len(self.__note_list)
@@ -25,11 +36,29 @@ class ListModel(QAbstractListModel):
         self.__note_list.pop(row)
         self.endRemoveRows()
 
+    def rowCount(self, parent=None):
+        return len(self.__note_list)
+
+    def columnCount(self, parent=None):
+        return 3
+
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
-            item = self.__note_list[index.row()]
-            return f"{item}"
+            product = self.__note_list[index.row()]
+            if index.column() == 0:
+                return product.name
+            elif index.column() == 1:
+                return product.number
+            elif index.column() == 2:
+                return product.weight
+            else:
+                return 0
         return None
+
+    def get_all_weights_of_table(self):
+        self.count = 0
+        for item in self.__note_list:
+            self.count += item.get_all_weights()
 
 
 class MyWindow(QMainWindow):
@@ -38,8 +67,8 @@ class MyWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Заметки")
-        self.model = ListModel()
+        self.setWindowTitle("Список продуктов")
+        self.model = TableModel()
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
@@ -56,13 +85,22 @@ class MyWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
 
-        view = QListView()
+        view = QTableView()
         view.setModel(self.model)
         self.layout.addWidget(view)
 
         self.lineEdit = QLineEdit()
-        self.lineEdit.setPlaceholderText("Новая заметка")
+        self.lineEdit.setPlaceholderText("Название продукта")
         self.layout.addWidget(self.lineEdit)
+
+        self.layout.addWidget(QLabel("Выберите количество продукта:"))
+        self.spinbox_num = QSpinBox()
+        self.layout.addWidget(self.spinbox_num)
+
+        self.layout.addWidget(QLabel("Выберите массу продукта:"))
+        self.spinbox_weight = QSpinBox()
+        self.spinbox_weight.setSuffix(' кг')
+        self.layout.addWidget(self.spinbox_weight)
 
         button = QPushButton("Ввести заметку")
         self.layout.addWidget(button)
@@ -72,9 +110,13 @@ class MyWindow(QMainWindow):
 
     def handle_button(self):
         text = self.lineEdit.text()
-        if text.strip():
-            self.model.addRow(text)
+        num = self.spinbox_num.value()
+        weight = self.spinbox_weight.value()
+        if text.strip() and num and weight:
+            self.model.addRow(Product(text, num, weight))
             self.lineEdit.clear()
+            self.spinbox_num.clear()
+            self.spinbox_weight.clear()
 
     def click_on_note(self, modelIndex):
         self.model.removeRow(modelIndex.row())
