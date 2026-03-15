@@ -50,7 +50,6 @@ class MyWindow(QMainWindow):
 
         self.dateTimeEdit.dateTimeChanged.connect(self.handle_date)
 
-    @Slot()
     def handle_date(self):
         birth_date = self.dateTimeEdit.date()
         birth_date_dt = dt.datetime(birth_date.year(), birth_date.month(), birth_date.day())
