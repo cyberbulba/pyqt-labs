@@ -1,5 +1,6 @@
 import sys
 
+from PySide6.QtWidgets import QDoubleSpinBox
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QCheckBox, QSlider, QSpinBox, \
     QLineEdit
 from PySide6.QtCore import Qt
@@ -46,14 +47,16 @@ class MyWindow(QMainWindow):
         for i in range(len(self.cost_arr)):
             check_box = QCheckBox(self.cost_arr[i][0] + ' - ' + str(self.cost_arr[i][1]) + ' руб/кг')
 
-            spinBox = QSpinBox()
-            spinBox.setRange(1, 100)
+            spinBox = QDoubleSpinBox()
+            spinBox.setRange(0.1, 100.0)
+            spinBox.setSingleStep(0.1)
             spinBox.setSuffix(' кг')
 
             self.checkbox_layout.addWidget(check_box)
             self.checkbox_layout.addWidget(spinBox)
 
             check_box.toggled.connect(self.get_cost)
+            spinBox.valueChanged.connect(self.get_cost)
 
         self.label_res = QLabel()
         self.layout.addWidget(self.label_res)
@@ -81,15 +84,14 @@ class MyWindow(QMainWindow):
                 font = QFont()
                 font.setBold(True)
                 checkbox.setFont(font)
-                text += f'{name}: {price} * {spinbox.value()} = {price * spinbox.value()} руб\n '
+                text += f'{name}: {price} * {round(spinbox.value(), 2)} = {round(price * spinbox.value(), 2)} руб\n '
 
         self.text_res.setText(text)
 
-    @Slot()
     def get_cost(self):
         self.handle_checkboxes()
 
-        self.label_res.setText(f'К оплате: {self.cost} руб')
+        self.label_res.setText(f'К оплате: {round(self.cost, 2)} руб')
 
 
 def main():

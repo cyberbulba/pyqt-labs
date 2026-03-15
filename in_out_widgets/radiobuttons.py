@@ -51,7 +51,6 @@ class MyWindow(QMainWindow):
 
         self.radio_group.buttonClicked.connect(self.handle_radio_buttons)
 
-    @Slot()
     def handle_radio_buttons(self):
         year_arr = [
             "Зима — время покоя и холода: землю укрывает снег, деревья стоят голые, дни короткие, а ночи длинные. Морозные узоры на окнах и новогодние праздники создают особую атмосферу волшебства.",
@@ -60,12 +59,6 @@ class MyWindow(QMainWindow):
             "Осень — пора увядания и уюта: листья окрашиваются в золотые и багряные тона, погода становится прохладнее, небо часто затянуто тучами. Природа готовится к зимнему сну, а люди собирают урожай."]
 
         self.text_edit.setPlainText(year_arr[self.radio_group.checkedId()])
-
-    def create_text_label(self, text):
-        label = QLabel()
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # выравниваем по центру
-        self.layout.addWidget(label)
-        label.setText(text)
 
 
 def main():
