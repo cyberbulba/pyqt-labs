@@ -119,7 +119,10 @@ class MyWindow(QMainWindow):
         self.tab3.setAcceptDrops(True)
 
     def dragEnterEvent(self, e):
-        e.accept()
+        if self.move_flag == 0:
+            e.accept()
+        else:
+            e.ignore()
 
     def dropEvent(self, e):
         pos = e.position()
@@ -143,7 +146,6 @@ class MyWindow(QMainWindow):
 
                             self.widget_flag = 1
 
-    @Slot()
     def validate_form(self):
         error_string = ''
         if not self.personal_data.isChecked():
