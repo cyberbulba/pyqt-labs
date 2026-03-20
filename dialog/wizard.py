@@ -134,9 +134,21 @@ class CheckboxPage(QWizardPage):
     def __init__(self):
         super().__init__()
 
-        label = QLabel("Hello!")
+        label = QLabel("Что Вас интересует?")
         layout = QVBoxLayout(self)
         layout.addWidget(label)
+
+        self.checkboxes = {}
+
+        items = ["Видеокарты", "Процессоры", "БП", "ОЗУ", "Диски", "Мат. платы"]
+        for item in items:
+            checkbox = QCheckBox(item)
+            layout.addWidget(checkbox)
+            self.checkboxes[item] = checkbox
+
+        layout.addWidget(QLabel("Вы согласны на рассылку?"))
+        self.spam_checkbox = QCheckBox("Я согласен на рассылку")
+        layout.addWidget(self.spam_checkbox)
 
 
 class MyWindow(QMainWindow):
