@@ -1,8 +1,19 @@
 import sys
 
-from PySide6.QtWidgets import QPushButton
+from PySide6.QtWidgets import QPushButton, QDialog
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
+
+
+class MyDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Соглашение")
+
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("Вы принимаете соглашение?"))
+        self.setLayout(layout)
 
 
 class MyWindow(QMainWindow):
@@ -12,7 +23,7 @@ class MyWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Счётчик")
+        self.setWindowTitle("Диалоговое окно")
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
@@ -29,27 +40,16 @@ class MyWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
 
-        self.label = QLabel()
-        self.layout.addWidget(self.label)
-        self.label.setText(f'{self.count}')
+        button = QPushButton("Открыть диалоговое окно")
+        self.layout.addWidget(button)
 
-        button1 = QPushButton("Увеличить число")
-        self.layout.addWidget(button1)
-        button1.clicked.connect(self.count_up)
+        self.dialog = MyDialog()
 
-        button2 = QPushButton("Обнулить счётчик")
-        self.layout.addWidget(button2)
-        button2.clicked.connect(self.count_clear)
+        button.clicked.connect(self.open_dialog)
 
-    @Slot()
-    def count_up(self):
-        self.count += 1
-        self.label.setText(f"{self.count}")
+    def open_dialog(self):
+        self.dialog.exec()
 
-    @Slot()
-    def count_clear(self):
-        self.count = 0
-        self.label.setText(f"{self.count}")
 
 
 def main():
