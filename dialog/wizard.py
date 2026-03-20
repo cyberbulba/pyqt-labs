@@ -2,7 +2,7 @@ import sys
 
 from PySide6.QtCore import QRegularExpression
 from PySide6.QtGui import QRegularExpressionValidator
-from PySide6.QtWidgets import QPushButton, QDialog, QCheckBox, QWizard, QWizardPage, QLineEdit, QTextEdit
+from PySide6.QtWidgets import QPushButton, QDialog, QCheckBox, QWizard, QWizardPage, QLineEdit, QTextEdit, QMessageBox
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 
 
@@ -13,7 +13,15 @@ class MyWizard(QWizard):
         self.setWindowTitle("Wizard")
         self.addPage(AutorizePage())
         self.addPage(FIOPage())
-        self.addPage(CheckboxPage())
+        self.page3 = CheckboxPage()
+        self.addPage(self.page3)
+
+    def accept(self):
+        QMessageBox.information(None, "Wizard", "Wizard is accepted")
+        super(MyWizard, self).accept()
+
+    def get_selected_items(self):
+        return self.page3.get_selected_items()
 
 
 class AutorizePage(QWizardPage):
@@ -32,11 +40,13 @@ class AutorizePage(QWizardPage):
         self.login.setPlaceholderText("Логин (буквы, цифры)")
         self.login.setValidator(self.validator_login_password)
         self.login.textChanged.connect(self.check_complete)
+        self.registerField("loginField", self.login)
 
         self.password = QLineEdit()
         self.password.setPlaceholderText("Пароль (буквы, цифры)")
         self.password.setValidator(self.validator_login_password)
         self.password.textChanged.connect(self.check_complete)
+        self.registerField("passwordField", self.password)
 
         layout.addWidget(self.login)
         layout.addWidget(self.password)
@@ -80,16 +90,19 @@ class FIOPage(QWizardPage):
         self.family.setPlaceholderText("Фамилия")
         self.family.setValidator(self.validator_names)
         self.family.textChanged.connect(self.check_complete)
+        self.registerField("familyField", self.family)
 
         self.name = QLineEdit()
         self.name.setPlaceholderText("Имя")
         self.name.setValidator(self.validator_names)
         self.name.textChanged.connect(self.check_complete)
+        self.registerField("nameField", self.name)
 
         self.fathername = QLineEdit()
         self.fathername.setPlaceholderText("Отчество")
         self.fathername.setValidator(self.validator_names)
         self.fathername.textChanged.connect(self.check_complete)
+        self.registerField("fathernameField", self.fathername)
 
         layout = QVBoxLayout(self)
         layout.addWidget(label)
@@ -150,6 +163,17 @@ class CheckboxPage(QWizardPage):
         self.spam_checkbox = QCheckBox("Я согласен на рассылку")
         layout.addWidget(self.spam_checkbox)
 
+        self.registerField("spamField", self.spam_checkbox)
+
+    def get_selected_items(self):
+        selected_items = ""
+
+        for item in self.checkboxes.keys():
+            if self.checkboxes[item].isChecked():
+                selected_items += item + ", "
+
+        return selected_items[:-2]
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -180,9 +204,30 @@ class MyWindow(QMainWindow):
         self.wizard = MyWizard()
 
         button.clicked.connect(self.open_wizard)
+        self.wizard.accepted.connect(self.print_user_data)
+
+        self.res_text = QTextEdit()
+        self.layout.addWidget(self.res_text)
+        self.res_text.setReadOnly(True)
 
     def open_wizard(self):
         self.wizard.exec()
+
+    def print_user_data(self):
+        user_info_string = "Пользователь ввёл: \n"
+        user_info_string += f'Логин: {self.wizard.field("loginField") + '\n'}'
+        user_info_string += f'Пароль: {self.wizard.field("passwordField") + '\n'}'
+        user_info_string += f'Фамилия: {self.wizard.field("familyField") + '\n'}'
+        user_info_string += f'Имя: {self.wizard.field("nameField") + '\n'}'
+        user_info_string += f'Отчество: {self.wizard.field("fathernameField") + '\n'}'
+        user_info_string += f'Пользователю интересны: {self.wizard.get_selected_items()} \n'
+
+        if self.wizard.field("spamField"):
+            user_info_string += f'Пользователь согласен на рассылку\n'
+        else:
+            user_info_string += f'Пользователь не согласен на рассылку\n'
+
+        self.res_text.setText(user_info_string)
 
 
 def main():
