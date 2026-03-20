@@ -20,9 +20,52 @@ class AutorizePage(QWizardPage):
     def __init__(self):
         super().__init__()
 
-        label = QLabel("Hello!")
+        self.validator_login_password = QRegularExpressionValidator(
+            QRegularExpression("[a-zа-яёA-ZА-ЯЁ0-9]+$"))
+
+        label = QLabel("Вход в систему:")
+
         layout = QVBoxLayout(self)
         layout.addWidget(label)
+
+        self.login = QLineEdit()
+        self.login.setPlaceholderText("Логин (буквы, цифры)")
+        self.login.setValidator(self.validator_login_password)
+        self.login.textChanged.connect(self.check_complete)
+
+        self.password = QLineEdit()
+        self.password.setPlaceholderText("Пароль (буквы, цифры)")
+        self.password.setValidator(self.validator_login_password)
+        self.password.textChanged.connect(self.check_complete)
+
+        layout.addWidget(self.login)
+        layout.addWidget(self.password)
+
+        self.error_text = QTextEdit()
+        self.error_text.setReadOnly(True)
+        layout.addWidget(self.error_text)
+
+    def isComplete(self):
+        error_string = ""
+
+        state_login, _, _ = self.validator_login_password.validate(self.login.text(), 0)
+        state_password, _, _ = self.validator_login_password.validate(self.password.text(), 0)
+
+        if state_login != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильный логин!\n"
+
+        if state_password != QRegularExpressionValidator.State.Acceptable:
+            error_string += "Неправильный пароль!\n"
+        if not error_string:
+            self.error_text.setText("Все данные корректны")
+        else:
+            self.error_text.setText(error_string)
+
+        return (state_login == QRegularExpressionValidator.State.Acceptable and
+                state_password == QRegularExpressionValidator.State.Acceptable)
+
+    def check_complete(self):
+        self.completeChanged.emit()
 
 
 class FIOPage(QWizardPage):
@@ -85,6 +128,7 @@ class FIOPage(QWizardPage):
 
     def check_complete(self):
         self.completeChanged.emit()
+
 
 class CheckboxPage(QWizardPage):
     def __init__(self):
