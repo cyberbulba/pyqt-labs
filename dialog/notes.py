@@ -1,7 +1,8 @@
 import sys
 
-from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit
-from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
+from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QDialog, \
+    QCheckBox, QDateTimeEdit
+from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
@@ -32,6 +33,42 @@ class ListModel(QAbstractListModel):
         return None
 
 
+class MyDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Добавить заметку")
+
+        layout = QVBoxLayout()
+
+        self.setLayout(layout)
+
+        self.lineEdit = QLineEdit()
+        self.lineEdit.setPlaceholderText("Новая заметка")
+        layout.addWidget(self.lineEdit)
+
+        self.dateTimeEdit = QDateTimeEdit(QDate.currentDate())
+
+        self.dateTimeEdit.setDisplayFormat("yyyy.MM.dd")
+        self.dateTimeEdit.setCalendarPopup(True)
+        layout.addWidget(self.dateTimeEdit)
+
+        self.button = QPushButton("ОК")
+        layout.addWidget(self.button)
+
+        self.button.clicked.connect(self.close_dialog)
+
+    def get_note(self):
+        text = self.lineEdit.text()
+        date = self.dateTimeEdit.date()
+        self.lineEdit.clear()
+
+        return f'{text} {date.toString("dd.MM.yyyy")}'
+
+    def close_dialog(self):
+        self.accept()
+
+
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -60,22 +97,21 @@ class MyWindow(QMainWindow):
         view.setModel(self.model)
         self.layout.addWidget(view)
 
-        self.lineEdit = QLineEdit()
-        self.lineEdit.setPlaceholderText("Новая заметка")
-        self.layout.addWidget(self.lineEdit)
-
         button = QPushButton("Ввести заметку")
         self.layout.addWidget(button)
 
-        button.clicked.connect(self.handle_button)
+        self.dialog = MyDialog()
+
+        button.clicked.connect(self.open_dialog)
+        self.dialog.accepted.connect(self.handle_button)
+
+    def open_dialog(self):
+        self.dialog.exec()
 
     def handle_button(self):
-        text = self.lineEdit.text()
+        text = self.dialog.get_note()
         if text.strip():
             self.model.addRow(text)
-            self.lineEdit.clear()
-
-
 
 
 def main():
