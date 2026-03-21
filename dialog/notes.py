@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate
 from PySide6.QtGui import QFont, QAction
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
+from Note import Note
 
 
 class ListModel(QAbstractListModel):
@@ -63,7 +64,7 @@ class MyDialog(QDialog):
         date = self.dateTimeEdit.date()
         self.lineEdit.clear()
 
-        return f'{text} {date.toString("dd.MM.yyyy")}'
+        return Note(text, date)
 
     def close_dialog(self):
         self.accept()
@@ -110,9 +111,9 @@ class MyWindow(QMainWindow):
         self.dialog.exec()
 
     def handle_button(self):
-        text = self.dialog.get_note()
-        if text.strip():
-            self.model.addRow(text)
+        note = self.dialog.get_note()
+        if note.get_text().strip():
+            self.model.addRow(note)
 
 
 def main():
