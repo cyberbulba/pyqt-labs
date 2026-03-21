@@ -33,6 +33,11 @@ class ListModel(QAbstractListModel):
             return f"{item}"
         return None
 
+    def get_note(self, index):
+        if index.isValid():
+            return self.__note_list[index.row()]
+        return None
+
     def updateRow(self, row, new_data):
         if 0 <= row < len(self.__note_list):
             self.__note_list[row] = new_data
@@ -127,12 +132,14 @@ class MyWindow(QMainWindow):
             self.model.addRow(note)
 
     def handle_change(self):
-        self.dialog.exec()
+        index = self.view.currentIndex()
 
-        index = self.view.currentIndex().row()
-        note = self.dialog.get_note()
-        self.dialog.set_text(note.get_text())
-        self.model.updateRow(index, note)
+        if index.isValid():
+            current_text = self.model.get_note(index).get_text()
+            self.dialog.set_text(current_text)
+            self.dialog.exec()
+            note = self.dialog.get_note()
+            self.model.updateRow(index.row(), note)
 
 
 def main():
