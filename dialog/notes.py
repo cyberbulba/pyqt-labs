@@ -44,7 +44,7 @@ class MyDialog(QDialog):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Добавить заметку")
+        self.setWindowTitle("Работа с заметкой")
 
         layout = QVBoxLayout()
 
@@ -74,6 +74,9 @@ class MyDialog(QDialog):
 
     def close_dialog(self):
         self.accept()
+
+    def set_text(self, text):
+        self.lineEdit.setText(text)
 
 
 class MyWindow(QMainWindow):
@@ -128,6 +131,7 @@ class MyWindow(QMainWindow):
 
         index = self.view.currentIndex().row()
         note = self.dialog.get_note()
+        self.dialog.set_text(note.get_text())
         self.model.updateRow(index, note)
 
 
