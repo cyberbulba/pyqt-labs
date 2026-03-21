@@ -33,6 +33,12 @@ class ListModel(QAbstractListModel):
             return f"{item}"
         return None
 
+    def updateRow(self, row, new_data):
+        if 0 <= row < len(self.__note_list):
+            self.__note_list[row] = new_data
+            index = self.index(row)
+            self.dataChanged.emit(index, index, [Qt.DisplayRole])
+
 
 class MyDialog(QDialog):
     def __init__(self):
@@ -99,21 +105,30 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.view)
 
         self.dialog = MyDialog()
-        self.dialog.accepted.connect(self.handle_button)
+        # self.dialog.accepted.connect(self.handle_add)
 
         self.view.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.infoAction = QAction("Add", self.view)
-        self.view.addAction(self.infoAction)
-        self.infoAction.triggered.connect(self.open_dialog)
+        self.addAction = QAction("Добавить заметку", self.view)
+        self.view.addAction(self.addAction)
+        self.addAction.triggered.connect(self.handle_add)
 
+        self.changeAction = QAction("Изменить заметку", self.view)
+        self.view.addAction(self.changeAction)
+        self.changeAction.triggered.connect(self.handle_change)
 
-    def open_dialog(self):
+    def handle_add(self):
         self.dialog.exec()
 
-    def handle_button(self):
         note = self.dialog.get_note()
         if note.get_text().strip():
             self.model.addRow(note)
+
+    def handle_change(self):
+        self.dialog.exec()
+
+        index = self.view.currentIndex().row()
+        note = self.dialog.get_note()
+        self.model.updateRow(index, note)
 
 
 def main():
