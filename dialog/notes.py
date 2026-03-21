@@ -138,11 +138,12 @@ class MyWindow(QMainWindow):
         index = self.view.currentIndex()
 
         if index.isValid():
-            current_text = self.model.get_note(index).get_text()
-            self.dialog.set_text(current_text)
-            self.dialog.exec()
-            note = self.dialog.get_note()
-            self.model.setData(index, note, Qt.UserRole)
+            if self.view.selectionModel().hasSelection():
+                current_text = self.model.get_note(index).get_text()
+                self.dialog.set_text(current_text)
+                self.dialog.exec()
+                note = self.dialog.get_note()
+                self.model.setData(index, note, Qt.UserRole)
 
     def add_menu(self):
         menuBar = self.menuBar()
