@@ -38,11 +38,12 @@ class ListModel(QAbstractListModel):
             return self.__note_list[index.row()]
         return None
 
-    def updateRow(self, row, new_data):
-        if 0 <= row < len(self.__note_list):
-            self.__note_list[row] = new_data
-            index = self.index(row)
-            self.dataChanged.emit(index, index, [Qt.DisplayRole])
+    def setData(self, index, value, role=Qt.EditRole):
+        if index.isValid() and role == Qt.UserRole:
+            self.__note_list[index.row()] = value
+            self.dataChanged.emit(index, index, [role])
+            return True
+        return False
 
 
 class MyDialog(QDialog):
@@ -139,7 +140,7 @@ class MyWindow(QMainWindow):
             self.dialog.set_text(current_text)
             self.dialog.exec()
             note = self.dialog.get_note()
-            self.model.updateRow(index.row(), note)
+            self.model.setData(index, note, Qt.UserRole)
 
 
 def main():
