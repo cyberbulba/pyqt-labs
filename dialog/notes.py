@@ -128,11 +128,10 @@ class MyWindow(QMainWindow):
         self.add_menu()
 
     def handle_add(self):
-        self.dialog.exec()
-
-        note = self.dialog.get_note()
-        if note.get_text().strip():
-            self.model.addRow(note)
+        if self.dialog.exec() == QDialog.Accepted:
+            note = self.dialog.get_note()
+            if note.get_text().strip():
+                self.model.addRow(note)
 
     def handle_change(self):
         index = self.view.currentIndex()
@@ -141,9 +140,9 @@ class MyWindow(QMainWindow):
             if self.view.selectionModel().hasSelection():
                 current_text = self.model.get_note(index).get_text()
                 self.dialog.set_text(current_text)
-                self.dialog.exec()
-                note = self.dialog.get_note()
-                self.model.setData(index, note, Qt.UserRole)
+                if self.dialog.exec() == QDialog.Accepted:
+                    note = self.dialog.get_note()
+                    self.model.setData(index, note, Qt.UserRole)
 
     def add_menu(self):
         menuBar = self.menuBar()
