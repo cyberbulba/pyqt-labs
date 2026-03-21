@@ -3,7 +3,7 @@ import sys
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QDialog, \
     QCheckBox, QDateTimeEdit
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QAction
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 
@@ -93,17 +93,18 @@ class MyWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
 
-        view = QListView()
-        view.setModel(self.model)
-        self.layout.addWidget(view)
-
-        button = QPushButton("Ввести заметку")
-        self.layout.addWidget(button)
+        self.view = QListView()
+        self.view.setModel(self.model)
+        self.layout.addWidget(self.view)
 
         self.dialog = MyDialog()
-
-        button.clicked.connect(self.open_dialog)
         self.dialog.accepted.connect(self.handle_button)
+
+        self.view.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.infoAction = QAction("Add", self.view)
+        self.view.addAction(self.infoAction)
+        self.infoAction.triggered.connect(self.open_dialog)
+
 
     def open_dialog(self):
         self.dialog.exec()
