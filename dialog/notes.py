@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QDialog, \
-    QCheckBox, QDateTimeEdit
+    QCheckBox, QDateTimeEdit, QMenu
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate
 from PySide6.QtGui import QFont, QAction
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
@@ -125,6 +125,8 @@ class MyWindow(QMainWindow):
         self.view.addAction(self.changeAction)
         self.changeAction.triggered.connect(self.handle_change)
 
+        self.add_menu()
+
     def handle_add(self):
         self.dialog.exec()
 
@@ -141,6 +143,15 @@ class MyWindow(QMainWindow):
             self.dialog.exec()
             note = self.dialog.get_note()
             self.model.setData(index, note, Qt.UserRole)
+
+    def add_menu(self):
+        menuBar = self.menuBar()
+        menuFile = menuBar.addMenu("Меню")
+        menuCreate = menuFile.addAction("Создать новую заметку")
+        menuChange = menuFile.addAction("Редактировать выбранную заметку")
+
+        menuCreate.triggered.connect(self.handle_add)
+        menuChange.triggered.connect(self.handle_change)
 
 
 def main():
