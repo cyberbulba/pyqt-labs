@@ -45,11 +45,11 @@ class TableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             product = self.__note_list[index.row()]
             if index.column() == 0:
-                return product.name
+                return product.get_name()
             elif index.column() == 1:
-                return product.number
+                return product.get_number()
             elif index.column() == 2:
-                return product.weight
+                return product.get_weight()
             else:
                 return 0
         return None
