@@ -2,7 +2,6 @@ import sys
 
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot
 

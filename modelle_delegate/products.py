@@ -23,6 +23,9 @@ class TableModel(QAbstractTableModel):
     def rowCount(self, parent=None):
         return len(self.__note_list)
 
+    def columnCount(self, parent=None):
+        return 3
+
     def addRow(self, row):
         self.beginInsertRows(QModelIndex(), len(self.__note_list), len(self.__note_list))
         self.__note_list.append(row)
@@ -32,12 +35,6 @@ class TableModel(QAbstractTableModel):
         self.beginRemoveRows(QModelIndex(), row, row)
         self.__note_list.pop(row)
         self.endRemoveRows()
-
-    def rowCount(self, parent=None):
-        return len(self.__note_list)
-
-    def columnCount(self, parent=None):
-        return 3
 
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
@@ -119,7 +116,7 @@ class MyWindow(QMainWindow):
         text = self.lineEdit.text()
         num = self.spinbox_num.value()
         weight = self.spinbox_weight.value()
-        if text.strip() and num and weight:
+        if text.strip() and num > 0 and weight > 0:
             self.model.addRow(Product(text, num, weight))
             self.lineEdit.clear()
             self.spinbox_num.clear()
