@@ -21,9 +21,10 @@ class ListModel(QAbstractListModel):
         self.endInsertRows()
 
     def removeRow(self, row):
-        self.beginRemoveRows(QModelIndex(), row, row)
-        self.__note_list.pop(row)
-        self.endRemoveRows()
+        if 0 <= row < len(self.__note_list):
+            self.beginRemoveRows(QModelIndex(), row, row)
+            self.__note_list.pop(row)
+            self.endRemoveRows()
 
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
@@ -72,7 +73,7 @@ class MyWindow(QMainWindow):
 
     def handle_button(self):
         text = self.lineEdit.text()
-        if text.strip():
+        if text.strip() and any(i.isprintable() for i in text):
             self.model.addRow(text)
             self.lineEdit.clear()
 
