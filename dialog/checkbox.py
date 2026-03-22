@@ -12,17 +12,17 @@ class MyDialog(QDialog):
 
         layout = QVBoxLayout()
         layout.addWidget(QLabel("Вы принимаете соглашение?"))
-        self.checkbox = QCheckBox("Соглашаюсь")
-        layout.addWidget(self.checkbox)
-        self.button = QPushButton("ОК")
-        layout.addWidget(self.button)
+        self.__checkbox = QCheckBox("Соглашаюсь")
+        layout.addWidget(self.__checkbox)
+        button = QPushButton("ОК")
+        layout.addWidget(button)
 
         self.setLayout(layout)
 
-        self.button.clicked.connect(self.close_dialog)
+        button.clicked.connect(self.close_dialog)
 
     def check_box_agreed(self):
-        return self.checkbox.isChecked()
+        return self.__checkbox.isChecked()
 
     def close_dialog(self):
         self.accept()
