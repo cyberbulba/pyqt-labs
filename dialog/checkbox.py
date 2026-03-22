@@ -21,17 +21,16 @@ class MyDialog(QDialog):
 
         self.button.clicked.connect(self.close_dialog)
 
-    def check_box_clicked(self):
+    def check_box_agreed(self):
         return self.checkbox.isChecked()
 
     def close_dialog(self):
-        self.close()
+        self.accept()
 
 
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.count = 0
         self.initUI()
 
     def initUI(self):
@@ -61,13 +60,13 @@ class MyWindow(QMainWindow):
         self.dialog = MyDialog()
 
         button.clicked.connect(self.open_dialog)
-        self.dialog.finished.connect(self.write_agreement)
+        self.dialog.accepted.connect(self.write_agreement)
 
     def open_dialog(self):
         self.dialog.exec()
 
     def write_agreement(self):
-        if self.dialog.check_box_clicked():
+        if self.dialog.check_box_agreed():
             text = "чекбокс выбран"
         else:
             text = "чекбокс не выбран"

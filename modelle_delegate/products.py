@@ -1,5 +1,6 @@
 import sys
 
+from PySide6.QtWidgets import QDoubleSpinBox
 from PySide6.QtCore import QAbstractTableModel
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QTableView, \
     QSpinBox
@@ -62,7 +63,6 @@ class TableModel(QAbstractTableModel):
             count += item.get_all_weights()
         return count
 
-
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -100,7 +100,7 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.spinbox_num)
 
         self.layout.addWidget(QLabel("Выберите массу продукта:"))
-        self.spinbox_weight = QSpinBox()
+        self.spinbox_weight = QDoubleSpinBox()
         self.spinbox_weight.setSuffix(' кг')
         self.layout.addWidget(self.spinbox_weight)
 
