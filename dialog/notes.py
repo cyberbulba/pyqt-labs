@@ -115,7 +115,6 @@ class MyWindow(QMainWindow):
         self.selection_model.selectionChanged.connect(self.on_selection_changed)
 
         self.dialog = MyDialog()
-        # self.dialog.accepted.connect(self.handle_add)
 
         self.view.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addAction = QAction("Добавить заметку", self.view)
@@ -129,7 +128,7 @@ class MyWindow(QMainWindow):
 
         self.add_menu()
 
-    def on_selection_changed(self, selected, deselected):
+    def on_selection_changed(self):
         has_selection = self.selection_model.hasSelection()
         self.changeAction.setEnabled(has_selection)
         self.menuChange.setEnabled(has_selection)
