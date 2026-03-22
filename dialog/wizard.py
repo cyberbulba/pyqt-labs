@@ -215,11 +215,11 @@ class MyWindow(QMainWindow):
 
     def print_user_data(self):
         user_info_string = "Пользователь ввёл: \n"
-        user_info_string += f'Логин: {self.wizard.field("loginField") + '\n'}'
-        user_info_string += f'Пароль: {self.wizard.field("passwordField") + '\n'}'
-        user_info_string += f'Фамилия: {self.wizard.field("familyField") + '\n'}'
-        user_info_string += f'Имя: {self.wizard.field("nameField") + '\n'}'
-        user_info_string += f'Отчество: {self.wizard.field("fathernameField") + '\n'}'
+        user_info_string += f'Логин: {self.wizard.field("loginField")} \n'
+        user_info_string += f'Пароль: {self.wizard.field("passwordField")} \n'
+        user_info_string += f'Фамилия: {self.wizard.field("familyField")} \n'
+        user_info_string += f'Имя: {self.wizard.field("nameField")} \n'
+        user_info_string += f'Отчество: {self.wizard.field("fathernameField")} \n'
         user_info_string += f'Пользователю интересны: {self.wizard.get_selected_items()} \n'
 
         if self.wizard.field("spamField"):
