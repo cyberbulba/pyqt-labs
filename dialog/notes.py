@@ -55,9 +55,9 @@ class MyDialog(QDialog):
 
         self.setLayout(layout)
 
-        self.lineEdit = QLineEdit()
-        self.lineEdit.setPlaceholderText("Новая заметка")
-        layout.addWidget(self.lineEdit)
+        self.__lineEdit = QLineEdit()
+        self.__lineEdit.setPlaceholderText("Новая заметка")
+        layout.addWidget(self.__lineEdit)
 
         self.dateTimeEdit = QDateTimeEdit(QDate.currentDate())
 
@@ -71,9 +71,9 @@ class MyDialog(QDialog):
         self.button.clicked.connect(self.close_dialog)
 
     def get_note(self):
-        text = self.lineEdit.text()
+        text = self.__lineEdit.text()
         date = self.dateTimeEdit.date()
-        self.lineEdit.clear()
+        self.__lineEdit.clear()
 
         return Note(text, date)
 
@@ -81,7 +81,7 @@ class MyDialog(QDialog):
         self.accept()
 
     def set_text(self, text):
-        self.lineEdit.setText(text)
+        self.__lineEdit.setText(text)
 
 
 class MyWindow(QMainWindow):
@@ -111,6 +111,8 @@ class MyWindow(QMainWindow):
         self.view = QListView()
         self.view.setModel(self.model)
         self.layout.addWidget(self.view)
+        self.selection_model = self.view.selectionModel()
+        self.selection_model.selectionChanged.connect(self.on_selection_changed)
 
         self.dialog = MyDialog()
         # self.dialog.accepted.connect(self.handle_add)
@@ -123,8 +125,14 @@ class MyWindow(QMainWindow):
         self.changeAction = QAction("Изменить заметку", self.view)
         self.view.addAction(self.changeAction)
         self.changeAction.triggered.connect(self.handle_change)
+        self.changeAction.setEnabled(False)
 
         self.add_menu()
+
+    def on_selection_changed(self, selected, deselected):
+        has_selection = self.selection_model.hasSelection()
+        self.changeAction.setEnabled(has_selection)
+        self.menuChange.setEnabled(has_selection)
 
     def handle_add(self):
         if self.dialog.exec() == QDialog.Accepted:
@@ -147,11 +155,11 @@ class MyWindow(QMainWindow):
         menuBar = self.menuBar()
         menuFile = menuBar.addMenu("Меню")
         menuCreate = menuFile.addAction("Создать новую заметку")
-        menuChange = menuFile.addAction("Редактировать выбранную заметку")
+        self.menuChange = menuFile.addAction("Редактировать выбранную заметку")
 
         menuCreate.triggered.connect(self.handle_add)
-        menuChange.triggered.connect(self.handle_change)
-
+        self.menuChange.triggered.connect(self.handle_change)
+        self.menuChange.setEnabled(False)
 
 def main():
     app = QApplication(sys.argv)
