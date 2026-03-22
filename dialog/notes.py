@@ -1,11 +1,10 @@
 import sys
 
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QDialog, \
-    QCheckBox, QDateTimeEdit, QMenu
+    QCheckBox, QDateTimeEdit
 from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate
-from PySide6.QtGui import QFont, QAction
-from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
-from PySide6.QtCore import Slot
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout
 from Note import Note
 
 
