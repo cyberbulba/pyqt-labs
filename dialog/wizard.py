@@ -28,7 +28,7 @@ class AutorizePage(QWizardPage):
     def __init__(self):
         super().__init__()
 
-        self.validator_login_password = QRegularExpressionValidator(
+        self.__validator_login_password = QRegularExpressionValidator(
             QRegularExpression("[a-zа-яёA-ZА-ЯЁ0-9]+$"))
 
         label = QLabel("Вход в систему:")
@@ -36,30 +36,30 @@ class AutorizePage(QWizardPage):
         layout = QVBoxLayout(self)
         layout.addWidget(label)
 
-        self.login = QLineEdit()
-        self.login.setPlaceholderText("Логин (буквы, цифры)")
-        self.login.setValidator(self.validator_login_password)
-        self.login.textChanged.connect(self.check_complete)
-        self.registerField("loginField", self.login)
+        self.__login = QLineEdit()
+        self.__login.setPlaceholderText("Логин (буквы, цифры)")
+        self.__login.setValidator(self.__validator_login_password)
+        self.__login.textChanged.connect(self.check_complete)
+        self.registerField("loginField", self.__login)
 
-        self.password = QLineEdit()
-        self.password.setPlaceholderText("Пароль (буквы, цифры)")
-        self.password.setValidator(self.validator_login_password)
-        self.password.textChanged.connect(self.check_complete)
-        self.registerField("passwordField", self.password)
+        self.__password = QLineEdit()
+        self.__password.setPlaceholderText("Пароль (буквы, цифры)")
+        self.__password.setValidator(self.__validator_login_password)
+        self.__password.textChanged.connect(self.check_complete)
+        self.registerField("passwordField", self.__password)
 
-        layout.addWidget(self.login)
-        layout.addWidget(self.password)
+        layout.addWidget(self.__login)
+        layout.addWidget(self.__password)
 
-        self.error_text = QTextEdit()
-        self.error_text.setReadOnly(True)
-        layout.addWidget(self.error_text)
+        self.__error_text = QTextEdit()
+        self.__error_text.setReadOnly(True)
+        layout.addWidget(self.__error_text)
 
     def isComplete(self):
         error_string = ""
 
-        state_login, _, _ = self.validator_login_password.validate(self.login.text(), 0)
-        state_password, _, _ = self.validator_login_password.validate(self.password.text(), 0)
+        state_login, _, _ = self.__validator_login_password.validate(self.__login.text(), 0)
+        state_password, _, _ = self.__validator_login_password.validate(self.__password.text(), 0)
 
         if state_login != QRegularExpressionValidator.State.Acceptable:
             error_string += "Неправильный логин!\n"
@@ -67,9 +67,9 @@ class AutorizePage(QWizardPage):
         if state_password != QRegularExpressionValidator.State.Acceptable:
             error_string += "Неправильный пароль!\n"
         if not error_string:
-            self.error_text.setText("Все данные корректны")
+            self.__error_text.setText("Все данные корректны")
         else:
-            self.error_text.setText(error_string)
+            self.__error_text.setText(error_string)
 
         return (state_login == QRegularExpressionValidator.State.Acceptable and
                 state_password == QRegularExpressionValidator.State.Acceptable)
@@ -84,42 +84,42 @@ class FIOPage(QWizardPage):
 
         label = QLabel("Введите ФИО:")
 
-        self.validator_names = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
+        self.__validator_names = QRegularExpressionValidator(QRegularExpression("^[А-ЯЁA-Z][а-яёa-z]+$"))
 
-        self.family = QLineEdit()
-        self.family.setPlaceholderText("Фамилия")
-        self.family.setValidator(self.validator_names)
-        self.family.textChanged.connect(self.check_complete)
-        self.registerField("familyField", self.family)
+        self.__family = QLineEdit()
+        self.__family.setPlaceholderText("Фамилия")
+        self.__family.setValidator(self.__validator_names)
+        self.__family.textChanged.connect(self.check_complete)
+        self.registerField("familyField", self.__family)
 
-        self.name = QLineEdit()
-        self.name.setPlaceholderText("Имя")
-        self.name.setValidator(self.validator_names)
-        self.name.textChanged.connect(self.check_complete)
-        self.registerField("nameField", self.name)
+        self.__name = QLineEdit()
+        self.__name.setPlaceholderText("Имя")
+        self.__name.setValidator(self.__validator_names)
+        self.__name.textChanged.connect(self.check_complete)
+        self.registerField("nameField", self.__name)
 
-        self.fathername = QLineEdit()
-        self.fathername.setPlaceholderText("Отчество")
-        self.fathername.setValidator(self.validator_names)
-        self.fathername.textChanged.connect(self.check_complete)
-        self.registerField("fathernameField", self.fathername)
+        self.__fathername = QLineEdit()
+        self.__fathername.setPlaceholderText("Отчество")
+        self.__fathername.setValidator(self.__validator_names)
+        self.__fathername.textChanged.connect(self.check_complete)
+        self.registerField("fathernameField", self.__fathername)
 
         layout = QVBoxLayout(self)
         layout.addWidget(label)
-        layout.addWidget(self.family)
-        layout.addWidget(self.name)
-        layout.addWidget(self.fathername)
+        layout.addWidget(self.__family)
+        layout.addWidget(self.__name)
+        layout.addWidget(self.__fathername)
 
-        self.error_text = QTextEdit()
-        self.error_text.setReadOnly(True)
-        layout.addWidget(self.error_text)
+        self.__error_text = QTextEdit()
+        self.__error_text.setReadOnly(True)
+        layout.addWidget(self.__error_text)
 
     def isComplete(self):
         error_string = ""
 
-        state_family, _, _ = self.validator_names.validate(self.family.text(), 0)
-        state_name, _, _ = self.validator_names.validate(self.name.text(), 0)
-        state_fathername, _, _ = self.validator_names.validate(self.fathername.text(), 0)
+        state_family, _, _ = self.__validator_names.validate(self.__family.text(), 0)
+        state_name, _, _ = self.__validator_names.validate(self.__name.text(), 0)
+        state_fathername, _, _ = self.__validator_names.validate(self.__fathername.text(), 0)
 
         if state_family != QRegularExpressionValidator.State.Acceptable:
             error_string += "Неправильная фамилия!\n"
@@ -131,9 +131,9 @@ class FIOPage(QWizardPage):
             error_string += "Неправильное отчество!\n"
 
         if not error_string:
-            self.error_text.setText("Все данные корректны")
+            self.__error_text.setText("Все данные корректны")
         else:
-            self.error_text.setText(error_string)
+            self.__error_text.setText(error_string)
 
         return (state_family == QRegularExpressionValidator.State.Acceptable and
                 state_name == QRegularExpressionValidator.State.Acceptable and
@@ -151,28 +151,28 @@ class CheckboxPage(QWizardPage):
         layout = QVBoxLayout(self)
         layout.addWidget(label)
 
-        self.checkboxes = {}
+        self.__checkboxes = {}
 
         items = ["Видеокарты", "Процессоры", "БП", "ОЗУ", "Диски", "Мат. платы"]
         for item in items:
             checkbox = QCheckBox(item)
             layout.addWidget(checkbox)
-            self.checkboxes[item] = checkbox
+            self.__checkboxes[item] = checkbox
 
         layout.addWidget(QLabel("Вы согласны на рассылку?"))
-        self.spam_checkbox = QCheckBox("Я согласен на рассылку")
-        layout.addWidget(self.spam_checkbox)
+        self.__spam_checkbox = QCheckBox("Я согласен на рассылку")
+        layout.addWidget(self.__spam_checkbox)
 
-        self.registerField("spamField", self.spam_checkbox)
+        self.registerField("spamField", self.__spam_checkbox)
 
     def get_selected_items(self):
-        selected_items = ""
+        selected_items = []
 
-        for item in self.checkboxes.keys():
-            if self.checkboxes[item].isChecked():
-                selected_items += item + ", "
+        for item in self.__checkboxes.keys():
+            if self.__checkboxes[item].isChecked():
+                selected_items.append(item)
 
-        return selected_items[:-2]
+        return ", ".join(selected_items) if selected_items else "Ничего не выбрано"
 
 
 class MyWindow(QMainWindow):
