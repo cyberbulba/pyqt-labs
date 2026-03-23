@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtWidgets import QDoubleSpinBox
-from PySide6.QtCore import QAbstractTableModel
+from PySide6.QtCore import QAbstractTableModel, Slot
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QTableView, \
     QSpinBox
 from PySide6.QtCore import Qt, QModelIndex
@@ -16,10 +16,10 @@ class TableModel(QAbstractTableModel):
         self.__note_list = self.__create_default_data()
 
     def __create_default_data(self):
-        return [Product("Виноград", 2, 2),
-                Product("Сливы", 2, 2),
-                Product("Яблоки зелёные", 2, 2),
-                Product("Бананы", 2, 2)]
+        return [Product("Груши", 2, 0.5),
+                Product("Бананы", 2, 0.3),
+                Product("Апельсины", 2, 2),
+                Product("Абрикосы", 2, 2)]
 
     def rowCount(self, parent=None):
         return len(self.__note_list)
@@ -112,6 +112,7 @@ class MyWindow(QMainWindow):
 
         button.clicked.connect(self.handle_button)
 
+    @Slot()
     def handle_button(self):
         text = self.lineEdit.text()
         num = self.spinbox_num.value()

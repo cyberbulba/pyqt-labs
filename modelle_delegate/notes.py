@@ -70,12 +70,14 @@ class MyWindow(QMainWindow):
         button.clicked.connect(self.handle_button)
         view.clicked.connect(self.click_on_note)
 
+    @Slot()
     def handle_button(self):
         text = self.lineEdit.text()
         if text.strip() and any(i.isprintable() for i in text):
             self.model.addRow(text)
             self.lineEdit.clear()
 
+    @Slot()
     def click_on_note(self, modelIndex):
         self.model.removeRow(modelIndex.row())
 
