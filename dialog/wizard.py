@@ -1,6 +1,6 @@
 import sys
 
-from PySide6.QtCore import QRegularExpression
+from PySide6.QtCore import QRegularExpression, Slot
 from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtWidgets import QPushButton, QDialog, QCheckBox, QWizard, QWizardPage, QLineEdit, QTextEdit, QMessageBox
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
@@ -13,15 +13,15 @@ class MyWizard(QWizard):
         self.setWindowTitle("Wizard")
         self.addPage(AutorizePage())
         self.addPage(FIOPage())
-        self.page3 = CheckboxPage()
-        self.addPage(self.page3)
+        self.__page3 = CheckboxPage()
+        self.addPage(self.__page3)
 
     def accept(self):
         QMessageBox.information(None, "Wizard", "Wizard is accepted")
         super(MyWizard, self).accept()
 
     def get_selected_items(self):
-        return self.page3.get_selected_items()
+        return self.__page3.get_selected_items()
 
 
 class AutorizePage(QWizardPage):
@@ -74,6 +74,7 @@ class AutorizePage(QWizardPage):
         return (state_login == QRegularExpressionValidator.State.Acceptable and
                 state_password == QRegularExpressionValidator.State.Acceptable)
 
+    @Slot()
     def check_complete(self):
         self.completeChanged.emit()
 
@@ -139,6 +140,7 @@ class FIOPage(QWizardPage):
                 state_name == QRegularExpressionValidator.State.Acceptable and
                 state_fathername == QRegularExpressionValidator.State.Acceptable)
 
+    @Slot()
     def check_complete(self):
         self.completeChanged.emit()
 
@@ -210,9 +212,11 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.res_text)
         self.res_text.setReadOnly(True)
 
+    @Slot()
     def open_wizard(self):
         self.wizard.exec()
 
+    @Slot()
     def print_user_data(self):
         user_info_string = "Пользователь ввёл: \n"
         user_info_string += f'Логин: {self.wizard.field("loginField")} \n'

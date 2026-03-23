@@ -2,7 +2,7 @@ import sys
 
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QDialog, \
     QCheckBox, QDateTimeEdit
-from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate
+from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex, QDate, Slot
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout
 from Note import Note
@@ -77,6 +77,7 @@ class MyDialog(QDialog):
 
         return Note(text, date)
 
+    @Slot()
     def close_dialog(self):
         self.accept()
 
@@ -128,27 +129,29 @@ class MyWindow(QMainWindow):
 
         self.add_menu()
 
+    @Slot()
     def on_selection_changed(self):
         has_selection = self.selection_model.hasSelection()
         self.changeAction.setEnabled(has_selection)
         self.menuChange.setEnabled(has_selection)
 
+    @Slot()
     def handle_add(self):
         if self.dialog.exec() == QDialog.Accepted:
             note = self.dialog.get_note()
             if note.get_text().strip():
                 self.model.addRow(note)
 
+    @Slot()
     def handle_change(self):
         index = self.view.currentIndex()
 
         if index.isValid():
-            if self.view.selectionModel().hasSelection():
-                current_text = self.model.get_note(index).get_text()
-                self.dialog.set_text(current_text)
-                if self.dialog.exec() == QDialog.Accepted:
-                    note = self.dialog.get_note()
-                    self.model.setData(index, note, Qt.UserRole)
+            current_text = self.model.get_note(index).get_text()
+            self.dialog.set_text(current_text)
+            if self.dialog.exec() == QDialog.Accepted:
+                note = self.dialog.get_note()
+                self.model.setData(index, note, Qt.UserRole)
 
     def add_menu(self):
         menuBar = self.menuBar()

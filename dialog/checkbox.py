@@ -1,5 +1,6 @@
 import sys
 
+from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QPushButton, QDialog, QCheckBox
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 
@@ -24,6 +25,7 @@ class MyDialog(QDialog):
     def check_box_agreed(self):
         return self.__checkbox.isChecked()
 
+    @Slot()
     def close_dialog(self):
         self.accept()
 
@@ -62,9 +64,11 @@ class MyWindow(QMainWindow):
         button.clicked.connect(self.open_dialog)
         self.dialog.accepted.connect(self.write_agreement)
 
+    @Slot()
     def open_dialog(self):
         self.dialog.exec()
 
+    @Slot()
     def write_agreement(self):
         if self.dialog.check_box_agreed():
             text = "чекбокс выбран"
