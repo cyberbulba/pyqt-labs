@@ -25,7 +25,6 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.widget_flag = 0
         self.move_flag = 0
-        self.drag_offset = QPoint(0, 0)
         self.initUI()
 
     def initUI(self):
@@ -34,7 +33,7 @@ class MyWindow(QMainWindow):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
 
-        self.height = int(screen_geometry.height() * 0.7)
+        self.height = int(screen_geometry.height() * 0.8)
 
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
