@@ -1,0 +1,24 @@
+QLabel {
+    border-style: outset;
+    border-width: 1px;
+    border-radius: 10px;
+    font: bold 14px "Times New Roman";
+    padding: 8px 20px;
+    qproperty-alignment: AlignCenter;
+}
+
+QPushButton {
+    font: bold 14px "Times New Roman";
+    padding: 10 px;
+    background-color: lightgreen;
+}
+
+QTextEdit {
+    font: 14px "Times New Roman";
+    padding: 10 px;
+}
+
+QDoubleSpinBox {
+    font: 14px "Times New Roman";
+    padding: 10 px;
+}
