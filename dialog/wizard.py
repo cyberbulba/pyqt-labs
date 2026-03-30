@@ -23,6 +23,22 @@ class MyWizard(QWizard):
     def get_selected_items(self):
         return self.__page3.get_selected_items()
 
+    def get_text(self):
+        user_info_string = "Пользователь ввёл: \n"
+        user_info_string += f'Логин: {self.field("loginField")} \n'
+        user_info_string += f'Пароль: {self.field("passwordField")} \n'
+        user_info_string += f'Фамилия: {self.field("familyField")} \n'
+        user_info_string += f'Имя: {self.field("nameField")} \n'
+        user_info_string += f'Отчество: {self.field("fathernameField")} \n'
+        user_info_string += f'Пользователю интересны: {self.get_selected_items()} \n'
+
+        if self.field("spamField"):
+            user_info_string += f'Пользователь согласен на рассылку\n'
+        else:
+            user_info_string += f'Пользователь не согласен на рассылку\n'
+
+        return user_info_string
+
 
 class AutorizePage(QWizardPage):
     def __init__(self):
@@ -218,18 +234,7 @@ class MyWindow(QMainWindow):
 
     @Slot()
     def print_user_data(self):
-        user_info_string = "Пользователь ввёл: \n"
-        user_info_string += f'Логин: {self.wizard.field("loginField")} \n'
-        user_info_string += f'Пароль: {self.wizard.field("passwordField")} \n'
-        user_info_string += f'Фамилия: {self.wizard.field("familyField")} \n'
-        user_info_string += f'Имя: {self.wizard.field("nameField")} \n'
-        user_info_string += f'Отчество: {self.wizard.field("fathernameField")} \n'
-        user_info_string += f'Пользователю интересны: {self.wizard.get_selected_items()} \n'
-
-        if self.wizard.field("spamField"):
-            user_info_string += f'Пользователь согласен на рассылку\n'
-        else:
-            user_info_string += f'Пользователь не согласен на рассылку\n'
+        user_info_string = self.wizard.get_text()
 
         self.res_text.setText(user_info_string)
 

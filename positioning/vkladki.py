@@ -25,7 +25,6 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.widget_flag = 0
         self.move_flag = 0
-        self.drag_offset = QPoint(0, 0)
         self.initUI()
 
     def initUI(self):
@@ -34,7 +33,7 @@ class MyWindow(QMainWindow):
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
 
-        self.height = int(screen_geometry.height() * 0.7)
+        self.height = int(screen_geometry.height() * 0.75)
 
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
@@ -71,6 +70,8 @@ class MyWindow(QMainWindow):
 
         add = self.add_day("Понедельник", arr1, 1)
         self.add_day("Вторник", arr2, add)
+
+        #--------------------------------------------------------------------------
 
         self.layout2 = QVBoxLayout()
         form_layout = QFormLayout(self.tab2)
@@ -116,22 +117,19 @@ class MyWindow(QMainWindow):
         self.error_text = QTextEdit()
         form_layout.addRow(self.error_text)
         self.error_text.setReadOnly(True)
-        self.tab3.setAcceptDrops(True)
+        # self.tab3.setAcceptDrops(True)
 
     def dragEnterEvent(self, e):
         if self.move_flag == 0:
             e.accept()
-        else:
-            e.ignore()
 
     def dropEvent(self, e):
         pos = e.position()
 
-        if pos.y() > self.height // 2 and self.move_flag == 0:
-            self.move_label.move(pos.x(), pos.y())
-            self.move_flag = 1
-
-        e.accept()
+        if self.move_flag == 0:
+            if pos.y() > self.height // 2:
+                self.move_label.move(pos.x(), pos.y())
+                self.move_flag = 1
 
     def mousePressEvent(self, event):
         if self.tabs.currentIndex() == 2:
