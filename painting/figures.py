@@ -43,6 +43,15 @@ class MyWindow(QMainWindow):
                             ])
         painter.drawPolygon(points)
 
+        pen_2 = QPen()
+        pen_2.setStyle(Qt.DashLine)
+        pen_2.setWidth(5)
+        pen_2.setBrush(Qt.blue)
+        brush_2 = QBrush(QColor(0, 128, 0))
+
+        painter.setPen(pen_2)
+        painter.setBrush(brush_2)
+
         painter.drawRect(QRectF(0, 10 + self.height // 2, self.height // 2, self.height // 2))
 
         gradient = QLinearGradient(0, 1, 1, 0)
