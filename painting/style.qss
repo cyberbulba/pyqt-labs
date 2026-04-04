@@ -1,0 +1,45 @@
+QLabel {
+    border-style: outset;
+    border-width: 1px;
+    border-radius: 5px;
+    font: bold 14px "Times New Roman";
+    qproperty-alignment: AlignCenter;
+    color: #ad785f;
+}
+
+QPushButton {
+    border-style: outset;
+    max-width: 300px;
+    border-width: 3px;
+    border-color: green;
+    border-radius: 5px;
+    font: bold 14px "Times New Roman";
+    padding: 10 px;
+    background-color: lightgreen;
+}
+
+QPushButton:hover {
+    background-color: #46a2db;
+}
+
+QPushButton:pressed {
+    background-color: #39e3d2;
+}
+
+QTextEdit {
+    border-style: none;
+    font: 14px "Times New Roman";
+    padding: 5 px;
+    color: red;
+}
+
+QLineEdit {
+    font: 14px "Times New Roman";
+    padding: 10 px;
+    color: #ad785f;
+}
+
+QCheckBox {
+    font: 14px "Times New Roman";
+    padding: 10 px;
+}
