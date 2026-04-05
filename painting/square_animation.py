@@ -1,6 +1,7 @@
 import sys
 
-from PySide6.QtCore import Slot, QLineF, QPointF, QRectF
+from PySide6.QtCore import QPropertyAnimation
+from PySide6.QtCore import Slot, QLineF, QPointF, QRectF, QParallelAnimationGroup, QPoint, QEasingCurve
 from PySide6.QtGui import QPainter, QPolygonF, QPen, Qt, QBrush, QColor, QGradient, QLinearGradient
 from PySide6.QtWidgets import QPushButton, QDialog, QCheckBox
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
@@ -29,7 +30,7 @@ class MyWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Квадрат")
+        self.setWindowTitle("Анимация")
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()  # узнаём размеры экрана и устанавливаем окно
@@ -45,14 +46,41 @@ class MyWindow(QMainWindow):
         self.move(window_geometry.topLeft())
 
         self.layout = QVBoxLayout(self.central_widget)
-        self.layout.addWidget(SquareWidget(self.height))
+        self.square_widget = SquareWidget(self.height)
+        self.label = QLabel("Виджет 2")
+        self.layout.addWidget(self.square_widget)
+        self.layout.addWidget(self.label)
+
+        anim_1 = QPropertyAnimation(self.square_widget, b"pos", self)
+
+        anim_1.setDuration(5000)
+        anim_1.setKeyValueAt(0.0, QPoint(0, 0))
+        anim_1.setKeyValueAt(0.2, QPoint(self.height // 4, self.height // 2))
+        anim_1.setKeyValueAt(0.4, QPoint(self.height // 4, 0))
+        anim_1.setKeyValueAt(0.6, QPoint(self.height // 2, self.height // 2))
+        anim_1.setKeyValueAt(0.8, QPoint(self.height // 2, 0))
+        anim_1.setEndValue(QPoint(self.height // 2, self.height // 4))
+        anim_1.setEasingCurve(QEasingCurve.Linear)
+
+        anim_2 = QPropertyAnimation(self.label, b"pos", self)
+
+        anim_2.setDuration(5000)
+        anim_2.setKeyValueAt(0.0, QPoint(self.height // 2, 0))
+        anim_2.setKeyValueAt(0.2, QPoint(self.height // 4, self.height // 2))
+        anim_2.setKeyValueAt(0.4, QPoint(0, self.height // 4))
+        anim_2.setKeyValueAt(0.6, QPoint(self.height // 2, self.height // 2))
+        anim_2.setKeyValueAt(0.8, QPoint(0, self.height // 2))
+        anim_2.setEndValue(QPoint(self.height // 2, self.height // 4))
+        anim_2.setEasingCurve(QEasingCurve.Linear)
+
+        animation = QParallelAnimationGroup(self)
+        animation.addAnimation(anim_1)
+        animation.addAnimation(anim_2)
+        animation.start()
 
 
 def main():
     app = QApplication(sys.argv)
-
-    with open("style.qss", "r") as f:
-        app.setStyleSheet(f.read())
 
     window = MyWindow()
     window.show()
