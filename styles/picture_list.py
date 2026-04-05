@@ -1,6 +1,6 @@
 import sys
 
-from PyQt6.QtCore import QVariant
+
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtWidgets import QPushButton, QButtonGroup, QRadioButton, QTextEdit, QListView, QLineEdit, QCheckBox, \
