@@ -29,17 +29,17 @@ QPushButton:pressed {
 QTextEdit {
     border-style: none;
     font: 14px "Times New Roman";
-    padding: 5 px;
+    padding: 5px;
     color: red;
 }
 
 QLineEdit {
     font: 14px "Times New Roman";
-    padding: 10 px;
+    padding: 10px;
     color: #ad785f;
 }
 
 QCheckBox {
     font: 14px "Times New Roman";
-    padding: 10 px;
+    padding: 10px;
 }
