@@ -14,7 +14,7 @@ QPushButton {
     border-color: green;
     border-radius: 5px;
     font: bold 14px "Times New Roman";
-    padding: 10 px;
+    padding: 10px;
     background-color: lightgreen;
 }
 
@@ -35,11 +35,28 @@ QTextEdit {
 
 QLineEdit {
     font: 14px "Times New Roman";
-    padding: 10 px;
+    padding: 10px;
     color: #ad785f;
 }
 
 QCheckBox {
     font: 14px "Times New Roman";
-    padding: 10 px;
+    padding: 10px;
+}
+
+QListView {
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+QListView::item {
+    height: 200px;
+}
+
+QListView::item:hover {
+    background-color: #46a2db;
+}
+
+QListView::item:selected {
+    background-color: #39e3d2;
 }

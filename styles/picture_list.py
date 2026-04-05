@@ -75,9 +75,6 @@ class MyWindow(QMainWindow):
 
         button.clicked.connect(self.get_file_path)
 
-        self.res_label = QLabel()
-        self.layout.addWidget(self.res_label)
-
     @Slot()
     def get_file_path(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Выберите файл", "", "Images (*.png *.jpg *.jpeg *.bmp)")
@@ -87,6 +84,10 @@ class MyWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
     window = MyWindow()
     window.show()
     app.exec()
