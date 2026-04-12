@@ -43,11 +43,12 @@ class MyWindow(QMainWindow):
     def create_first_chart(self, df):
         series = QBarSeries()
 
-        set = QBarSet("2007")
+        set = QBarSet("")
         set.append(df["2007"].tolist())
         series.append(set)
 
         chart = QChart()
+        chart.legend().setVisible(False)
 
         chart.addSeries(series)
         chart.setTitle("Столбчатая диаграмма ураганов в 2007 году")
@@ -55,12 +56,14 @@ class MyWindow(QMainWindow):
 
         categories = df["Month"].tolist()
         axis_x = QBarCategoryAxis()
+        axis_x.setTitleText("Месяц")
         axis_x.append(categories)
         chart.addAxis(axis_x, Qt.AlignBottom)
         series.attachAxis(axis_x)
 
         axis_y = QValueAxis()
         axis_y.setRange(0, 50)
+        axis_y.setTitleText("Количество ураганов")
         chart.addAxis(axis_y, Qt.AlignLeft)
         series.attachAxis(axis_y)
 
@@ -75,11 +78,12 @@ class MyWindow(QMainWindow):
 
         series = QBarSeries()
 
-        set = QBarSet("Количество ураганов за год")
+        set = QBarSet("")
         set.append(data)
         series.append(set)
 
         chart = QChart()
+        chart.legend().setVisible(False)
 
         chart.addSeries(series)
         chart.setTitle("Столбчатая диаграмма ураганов за годы")
@@ -88,11 +92,13 @@ class MyWindow(QMainWindow):
         categories = [str(i) for i in range(2005, 2016)]
         axis_x = QBarCategoryAxis()
         axis_x.append(categories)
+        axis_x.setTitleText("Год")
         chart.addAxis(axis_x, Qt.AlignBottom)
         series.attachAxis(axis_x)
 
         axis_y = QValueAxis()
         axis_y.setRange(0, 50)
+        axis_y.setTitleText("Количество ураганов")
         chart.addAxis(axis_y, Qt.AlignLeft)
         series.attachAxis(axis_y)
 
