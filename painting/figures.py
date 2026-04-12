@@ -37,9 +37,9 @@ class MyWindow(QMainWindow):
         painter = QPainter(self)
         painter.setPen(pen_1)
         painter.setBrush(brush_1)
-        points = QPolygonF([QPointF(self.height // 4, 0),
-                            QPointF(0, self.height // 2),
-                            QPointF(self.height // 2, self.height // 2)
+        points = QPolygonF([QPointF(6 * self.height // 4, 0),
+                            QPointF(5 * self.height // 4, self.height // 2),
+                            QPointF(7 * self.height // 4, self.height // 2)
                             ])
         painter.drawPolygon(points)
 
@@ -50,7 +50,7 @@ class MyWindow(QMainWindow):
 
         painter.setBrush(brush_2)
 
-        painter.drawRect(QRectF(0, 10 + self.height // 2, self.height // 2, self.height // 2))
+        painter.drawRect(QRectF(5 * self.height // 4, 10 + self.height // 2, self.height // 2, self.height // 2))
 
         gradient = QLinearGradient(0, 1, 1, 0)
         gradient.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
@@ -58,7 +58,7 @@ class MyWindow(QMainWindow):
         gradient.setColorAt(0.5, Qt.blue)
         gradient.setColorAt(1.0, Qt.green)
         painter.setBrush(QBrush(gradient))
-        painter.drawEllipse(QRectF(self.height // 2, 0, self.height, self.height // 2))
+        painter.drawEllipse(QRectF(0, 10 + self.height // 2, self.height, self.height // 2))
 
 
 def main():
