@@ -13,27 +13,53 @@ from error import ExampleError
 class MyWizard(QWizard):
     def __init__(self):
         super().__init__()
+        self.__page_num = 2
+        self.__default_index = 0
+        self.__add_index = self.__page_num
 
         self.setWindowTitle("Wizard")
 
         self.pages = []
 
-        for _ in range(5):
+        for _ in range(self.__page_num):
+            page = ExamplePage()
+            self.addPage(page)
+            self.pages.append(page)
+
+        for _ in range(3):
             page = ExamplePage()
             self.addPage(page)
             self.pages.append(page)
 
     def nextId(self):
         current_id = self.currentId()
-        if
+        print(current_id)
+        print(self.__default_index)
+        if current_id >= self.__page_num:
+            if self.pages[current_id].get_res() == 0:
+                self.__add_index += 1
+                if self.__add_index >= len(self.pages) - 1:
+                    self.accept()
+                return self.__add_index
+            else:
+                self.__default_index += 1
+                if self.__default_index == self.__page_num:
+                    self.accept()
+                return self.__default_index
+        else:
+            if self.pages[current_id].get_res() == 0:
+                return self.__add_index
+            else:
+                if self.__default_index >= self.__page_num - 1:
+                    self.accept()
+                self.__default_index += 1
+                return self.__default_index
 
-
-
-    def accept(self):
-        QMessageBox.information(None, "Wizard", "Wizard is accepted")
-        print(sum(map(lambda page: page.get_res(), self.pages)))
-        print(*filter(lambda x: x is not None, map(lambda page: page.get_errors(), self.pages)))
-        super(MyWizard, self).accept()
+    # def accept(self):
+    #     QMessageBox.information(None, "Wizard", "Wizard is accepted")
+    #     print(list(map(lambda page: page.get_res(), self.pages)))
+    #     print(*filter(lambda x: x is not None, map(lambda page: page.get_errors(), self.pages)))
+    #     super(MyWizard, self).accept()
 
 
 class ExamplePage(QWizardPage):
@@ -64,18 +90,24 @@ class ExamplePage(QWizardPage):
         self.__res = 0
 
     def isComplete(self):
+        if self.radio_group.checkedButton():
+            ans = int(self.radio_group.checkedButton().text())
+
+            if ans == self.example.get_result():
+                self.__res = 1
+
         return self.radio_group.checkedButton() is not None
 
-    def validatePage(self):
+    def validate_page(self):
         ans = int(self.radio_group.checkedButton().text())
 
         if ans == self.example.get_result():
             self.__res = 1
 
-        return True
-
     def get_res(self):
-        return self.__res
+        if self.__res:
+            return self.__res
+        return 0
 
     def get_errors(self):
         if self.__res == 0:
