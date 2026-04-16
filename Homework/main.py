@@ -33,7 +33,7 @@ class MyWizard(QWizard):
 
     def nextId(self):
         current_id = self.currentId()
-
+        #
         print(self.__default_index)
         if current_id >= self.__page_num:
             if self.pages[current_id].get_res() == 0:
