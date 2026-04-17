@@ -59,7 +59,8 @@ class MyWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Обучение решению примеров с отрицательными числами")
-        self.num = 0
+        self.num_lvl_1 = 0
+        self.num_lvl_2 = 0
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()
@@ -77,10 +78,10 @@ class MyWindow(QMainWindow):
 
         self.layout = QGridLayout(self.central_widget)
 
-        self.button_lvl_1 = QPushButton("Уровень 1")
+        self.button_lvl_1 = QPushButton("Тест (lvl 1)")
         self.layout.addWidget(self.button_lvl_1, 0, 5)
 
-        self.button_lvl_2 = QPushButton("Уровень 2")
+        self.button_lvl_2 = QPushButton("Тест (lvl 2)")
         self.layout.addWidget(self.button_lvl_2, 1, 5)
 
         self.button_lvl_3 = QPushButton("Уровень 3")
@@ -114,15 +115,22 @@ class MyWindow(QMainWindow):
         view.setModel(self.model)
         self.layout.addWidget(view, 3, 0, 1, 4)
 
-        self.wizard = MyWizard()
+        self.wizard_lvl_1 = MyWizard(level=1)
+        self.wizard_lvl_2 = MyWizard(level=2)
 
-        self.button_lvl_1.clicked.connect(self.open_wizard)
+        self.button_lvl_1.clicked.connect(self.open_wizard_lvl_1)
+        self.button_lvl_2.clicked.connect(self.open_wizard_lvl_2)
 
-        self.wizard.accepted.connect(self.set_new_result)
+        self.wizard_lvl_1.accepted.connect(self.set_new_result_lvl_1)
+        self.wizard_lvl_2.accepted.connect(self.set_new_result_lvl_2)
 
     @Slot()
-    def open_wizard(self):
-        self.wizard.exec()
+    def open_wizard_lvl_1(self):
+        self.wizard_lvl_1.exec()
+
+    @Slot()
+    def open_wizard_lvl_2(self):
+        self.wizard_lvl_2.exec()
 
     @Slot()
     def handle_plus(self):
@@ -161,13 +169,22 @@ class MyWindow(QMainWindow):
                               "3. Если делимое равно 0, например 0 / (-5), то частное равно 0\n")
 
     @Slot()
-    def set_new_result(self):
-        self.num += 1
+    def set_new_result_lvl_1(self):
+        self.num_lvl_1 += 1
         self.model.addRow(
-            f'Тест {self.num}: {self.wizard.get_statistic()[0]} из {self.wizard.get_statistic()[0] + self.wizard.get_statistic()[1]} правильных ответов')
+            f'Тест lvl 1 № {self.num_lvl_1}: {self.wizard_lvl_1.get_statistic()[0]} из {self.wizard_lvl_1.get_statistic()[0] + self.wizard_lvl_1.get_statistic()[1]} правильных ответов')
 
-        self.wizard = MyWizard()
-        self.wizard.accepted.connect(self.set_new_result)
+        self.wizard_lvl_1 = MyWizard(level=1)
+        self.wizard_lvl_1.accepted.connect(self.set_new_result_lvl_1)
+
+    @Slot()
+    def set_new_result_lvl_2(self):
+        self.num_lvl_2 += 1
+        self.model.addRow(
+            f'Тест lvl 2 № {self.num_lvl_2}: {self.wizard_lvl_2.get_statistic()[0]} из {self.wizard_lvl_2.get_statistic()[0] + self.wizard_lvl_2.get_statistic()[1]} правильных ответов')
+
+        self.wizard_lvl_2 = MyWizard(level=2)
+        self.wizard_lvl_2.accepted.connect(self.set_new_result_lvl_2)
 
 
 def main():

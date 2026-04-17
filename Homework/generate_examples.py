@@ -2,13 +2,21 @@ import random
 
 
 class RandomExample1:
-    def __init__(self, action=None):
+    def __init__(self, action=None, sign=1):
         self.__a = random.randint(-100, -1)
-        self.__b = random.randint(-100, -1)
+
+        if sign == 1:
+            self.__b = random.randint(0, 100)
+        else:
+            self.__b = random.randint(-100, -1)
+
         if action is None:
             self.__action = random.choice(["+", "-", "*", "/"])
         else:
             self.__action = action
+
+        if self.__action == "/" and self.__b == 0:
+            self.__b = random.randint(1, 100)
 
     def get_result(self):
         match self.__action:

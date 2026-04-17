@@ -11,7 +11,7 @@ from error import ExampleError
 
 
 class MyWizard(QWizard):
-    def __init__(self):
+    def __init__(self, level=1):
         super().__init__()
         self.__page_num = 2
         self.__page_count = 1
@@ -22,8 +22,13 @@ class MyWizard(QWizard):
         self.__pages = []
         self.__statistic = []
 
+        if level == 1:
+            self.sign = 1
+        else:
+            self.sign = 0
+
         self.setWindowTitle("Wizard")
-        page = ExamplePage()
+        page = ExamplePage(sign=self.sign)
         self.setPage(0, page)
 
         self.__pages.append(page)
@@ -79,30 +84,12 @@ class MyWizard(QWizard):
     #             self.__pages.append(page)
     #             return self.addPage(page)
 
-    def reset(self):
-        self.restart()
-
-        self.__page_num = 2
-        self.__page_count = 1
-        self.__add_count_plus = 0
-        self.__add_count_minus = 0
-        self.__add_count_mult = 0
-        self.__add_count_div = 0
-        self.__pages = []
-        self.__statistic = []
-
-        self.setWindowTitle("Wizard")
-        page = ExamplePage()
-        self.setPage(0, page)
-
-        self.__pages.append(page)
-
     def nextId(self):
         current_id = self.currentId()
         current_page = self.__pages[current_id]
 
         if not current_page.has_answered():
-            page = ExamplePage()
+            page = ExamplePage(sign=self.sign)
             self.__pages.append(page)
             return self.addPage(page)
 
@@ -110,7 +97,8 @@ class MyWizard(QWizard):
         action = current_page.get_action()
 
         print(f'count:s{self.__page_count}')
-        print(f'+:{self.__add_count_plus}  -:{self.__add_count_minus} *:{self.__add_count_mult} /:{self.__add_count_div}')
+        print(
+            f'+:{self.__add_count_plus}  -:{self.__add_count_minus} *:{self.__add_count_mult} /:{self.__add_count_div}')
 
         self.__statistic.append(res)
         print(self.__statistic)
@@ -119,7 +107,7 @@ class MyWizard(QWizard):
             self.__page_count += 1
             if self.__page_count > 2:
                 self.accept()
-            page = ExamplePage()
+            page = ExamplePage(sign=self.sign)
             self.__pages.append(page)
             return self.addPage(page)
         else:
@@ -130,12 +118,12 @@ class MyWizard(QWizard):
                         print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
-                        page = ExamplePage("+")
+                        page = ExamplePage("+", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                     else:
                         self.__add_count_plus += 1
-                        page = ExamplePage("+")
+                        page = ExamplePage("+", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                 case "-":
@@ -144,12 +132,12 @@ class MyWizard(QWizard):
                         print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
-                        page = ExamplePage("-")
+                        page = ExamplePage("-", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                     else:
                         self.__add_count_minus += 1
-                        page = ExamplePage("-")
+                        page = ExamplePage("-", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                 case "*":
@@ -158,12 +146,12 @@ class MyWizard(QWizard):
                         print(self.__page_count)
                         if self.__page_count >= 2:
                             return self.accept()
-                        page = ExamplePage("*")
+                        page = ExamplePage("*", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                     else:
                         self.__add_count_mult += 1
-                        page = ExamplePage("*")
+                        page = ExamplePage("*", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                 case "/":
@@ -172,21 +160,22 @@ class MyWizard(QWizard):
                         print(self.__page_count)
                         if self.__page_count >= 2:
                             return self.accept()
-                        page = ExamplePage("/")
+                        page = ExamplePage("/", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
                     else:
                         self.__add_count_div += 1
-                        page = ExamplePage("/")
+                        page = ExamplePage("/", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
 
     def get_statistic(self):
-        return sum(list(filter(lambda p: p == 1, self.__statistic))), len(list(filter(lambda p: p == 0, self.__statistic)))
+        return sum(list(filter(lambda p: p == 1, self.__statistic))), len(
+            list(filter(lambda p: p == 0, self.__statistic)))
 
 
 class ExamplePage(QWizardPage):
-    def __init__(self, action=None):
+    def __init__(self, action=None, sign=1):
         super().__init__()
         self.__answered = False
         label = QLabel("Решите пример:")
@@ -195,9 +184,9 @@ class ExamplePage(QWizardPage):
         layout.addWidget(label)
 
         if action is None:
-            self.example = RandomExample1()
+            self.example = RandomExample1(sign=sign)
         else:
-            self.example = RandomExample1(action)
+            self.example = RandomExample1(action, sign=sign)
 
         self.radio_group = QButtonGroup()
         arr = [self.example.get_result(), random.randint(-100, -1), random.randint(-100, -1), random.randint(-100, -1)]
