@@ -2,10 +2,13 @@ import random
 
 
 class RandomExample1:
-    def __init__(self):
+    def __init__(self, action=None):
         self.__a = random.randint(-100, -1)
         self.__b = random.randint(-100, -1)
-        self.__action = random.choice(["+", "-", "*", "/"])
+        if action is None:
+            self.__action = random.choice(["+", "-", "*", "/"])
+        else:
+            self.__action = action
 
     def get_result(self):
         match self.__action:

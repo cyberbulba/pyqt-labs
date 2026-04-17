@@ -2,121 +2,14 @@ import random
 import sys
 
 from PySide6.QtGui import QRegularExpressionValidator
-from PySide6.QtWidgets import QGridLayout, QTextEdit, QWizard, QMessageBox, QLineEdit, QWizardPage, QCheckBox
+from PySide6.QtWidgets import QGridLayout, QTextEdit, QWizard, QMessageBox, QLineEdit, QWizardPage, QCheckBox, QListView
 from PySide6.QtWidgets import QPushButton, QDialog, QButtonGroup, QRadioButton
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot, QRegularExpression
 from generate_examples import RandomExample1
 from error import ExampleError
-
-
-class MyWizard(QWizard):
-    def __init__(self):
-        super().__init__()
-        self.__page_num = 2
-        self.__default_index = 0
-        self.__add_index = self.__page_num
-
-        self.setWindowTitle("Wizard")
-
-        self.pages = []
-
-        for _ in range(self.__page_num):
-            page = ExamplePage()
-            self.addPage(page)
-            self.pages.append(page)
-
-        for _ in range(3):
-            page = ExamplePage()
-            self.addPage(page)
-            self.pages.append(page)
-
-    def nextId(self):
-        current_id = self.currentId()
-        #
-        print(self.__default_index)
-        if current_id >= self.__page_num:
-            if self.pages[current_id].get_res() == 0:
-                self.__add_index += 1
-                if self.__add_index >= len(self.pages) - 1:
-                    self.accept()
-                return self.__add_index
-            else:
-                self.__default_index += 1
-                if self.__default_index == self.__page_num:
-                    self.accept()
-                return self.__default_index
-        else:
-            if self.pages[current_id].get_res() == 0:
-                return self.__add_index
-            else:
-                if self.__default_index >= self.__page_num - 1:
-                    self.accept()
-                self.__default_index += 1
-                return self.__default_index
-
-    # def accept(self):
-    #     QMessageBox.information(None, "Wizard", "Wizard is accepted")
-    #     print(list(map(lambda page: page.get_res(), self.pages)))
-    #     print(*filter(lambda x: x is not None, map(lambda page: page.get_errors(), self.pages)))
-    #     super(MyWizard, self).accept()
-
-
-class ExamplePage(QWizardPage):
-    def __init__(self):
-        super().__init__()
-
-        label = QLabel("Решите пример:")
-
-        layout = QVBoxLayout(self)
-        layout.addWidget(label)
-
-        self.example = RandomExample1()
-
-        self.radio_group = QButtonGroup()
-        arr = [self.example.get_result(), random.randint(-100, -1), random.randint(-100, -1), random.randint(-100, -1)]
-        random.shuffle(arr)
-
-        self.label = QLabel(self.example.get_without_answer())
-        layout.addWidget(self.label)
-
-        for i in range(len(arr)):
-            button = QRadioButton(str(arr[i]))
-            self.radio_group.addButton(button, id=i)
-            layout.addWidget(button)
-
-        self.radio_group.buttonClicked.connect(self.check_complete)
-
-        self.__res = 0
-
-    def isComplete(self):
-        if self.radio_group.checkedButton():
-            ans = int(self.radio_group.checkedButton().text())
-
-            if ans == self.example.get_result():
-                self.__res = 1
-
-        return self.radio_group.checkedButton() is not None
-
-    def validate_page(self):
-        ans = int(self.radio_group.checkedButton().text())
-
-        if ans == self.example.get_result():
-            self.__res = 1
-
-    def get_res(self):
-        if self.__res:
-            return self.__res
-        return 0
-
-    def get_errors(self):
-        if self.__res == 0:
-            return ExampleError(self.example.get_action())
-        return None
-
-    @Slot()
-    def check_complete(self):
-        self.completeChanged.emit()
+from wizard_1_lvl import MyWizard
+from list_model import ListModel
 
 
 # class MyDialog(QDialog):
@@ -166,6 +59,7 @@ class MyWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Обучение решению примеров с отрицательными числами")
+        self.num = 0
 
         screen = QApplication.primaryScreen()
         screen_geometry = screen.availableGeometry()
@@ -199,29 +93,33 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.button_plus, 1, 0)
         self.button_plus.clicked.connect(self.handle_plus)
 
-        self.button_plus = QPushButton("-")
-        self.layout.addWidget(self.button_plus, 1, 1)
+        self.button_minus = QPushButton("-")
+        self.layout.addWidget(self.button_minus, 1, 1)
+        self.button_minus.clicked.connect(self.handle_minus)
 
-        self.button_plus = QPushButton("*")
-        self.layout.addWidget(self.button_plus, 1, 2)
+        self.button_mult = QPushButton("*")
+        self.layout.addWidget(self.button_mult, 1, 2)
+        self.button_mult.clicked.connect(self.handle_mult)
 
-        self.button_plus = QPushButton("/")
-        self.layout.addWidget(self.button_plus, 1, 3)
+        self.button_div = QPushButton("/")
+        self.layout.addWidget(self.button_div, 1, 3)
+        self.button_div.clicked.connect(self.handle_div)
 
         self.textEdit = QTextEdit()
         self.textEdit.setReadOnly(True)
         self.layout.addWidget(self.textEdit, 2, 0, 1, 4)
 
+        self.model = ListModel()
+        view = QListView()
+        view.setModel(self.model)
+        self.layout.addWidget(view, 3, 0, 1, 4)
+
         self.wizard = MyWizard()
 
         self.button_lvl_1.clicked.connect(self.open_wizard)
 
-    #     self.dialog = MyDialog()
-    #     self.button_lvl_1.clicked.connect(self.open_dialog)
-    #
-    # @Slot()
-    # def open_dialog(self):
-    #     self.dialog.exec()
+        self.wizard.accepted.connect(self.set_new_result)
+
     @Slot()
     def open_wizard(self):
         self.wizard.exec()
@@ -234,6 +132,42 @@ class MyWindow(QMainWindow):
                               "2. Если число, к которому прибавляем отрицательное, например -3 - 5, то необходимо сложить модули\n"
                               "этих чисел: 3 + 5 = 8 и заменить знак на противоположный, таким образом -3 - 5 = -8\n"
                               "3. Если число, к которому прибавляем является 0, например -3 + 0 то в ответ следует записать само отрицательное число: -3 + 0 = -3\n")
+
+    @Slot()
+    def handle_minus(self):
+        self.textEdit.setText("Рассмотрим вычитание из отрицательного числа:\n "
+                              "1. Если из отрицательного числа вычитаем положительное, пример -3 - 5, \n"
+                              "тогда необходимо сложить модули чисел: 3 + 5 = 8 и поставить знак минус: -3 - 5 = -8\n"
+                              "2. Если из числа вычитаем отрицательное, например -3 - (-5), то два минуса дают плюс, \n"
+                              "заменяем вычитание на сложение: -3 + 5 = 2\n"
+                              "3. Если вычитаемое равно 0, например -3 - 0, то число не изменяется: -3 - 0 = -3\n")
+
+    @Slot()
+    def handle_mult(self):
+        self.textEdit.setText("Рассмотрим умножение с отрицательным числом:\n "
+                              "1. Если отрицательное число умножаем на отрицательное, пример -3 * (-5), \n"
+                              "тогда минус на минус дает плюс. Перемножаем модули: 3 * 5 = 15, результат: 15\n"
+                              "2. Если отрицательное число умножаем на положительное, например -3 * 5, то результат будет отрицательным: \n"
+                              "3 * 5 = 15, и заменить знак на противоположный: -15\n"
+                              "3. Если один из множителей равен 0, например -3 * 0, то произведение равно 0\n")
+
+    @Slot()
+    def handle_div(self):
+        self.textEdit.setText("Рассмотрим деление с отрицательным числом:\n "
+                              "1. Если отрицательное число делим на отрицательное, пример -10 / (-2), \n"
+                              "тогда минус на минус дает плюс. Делим модули: 10 / 2 = 5, результат: 5\n"
+                              "2. Если отрицательное число делим на положительное, например -10 / 2, то результат будет отрицательным: \n"
+                              "10 / 2 = 5, и заменить знак на противоположный: -5\n"
+                              "3. Если делимое равно 0, например 0 / (-5), то частное равно 0\n")
+
+    @Slot()
+    def set_new_result(self):
+        self.num += 1
+        self.model.addRow(
+            f'Тест {self.num}: {self.wizard.get_statistic()[0]} из {self.wizard.get_statistic()[0] + self.wizard.get_statistic()[1]} правильных ответов')
+
+        self.wizard = MyWizard()
+        self.wizard.accepted.connect(self.set_new_result)
 
 
 def main():
