@@ -20,6 +20,7 @@ class MyWizard(QWizard):
         self.__add_count_mult = 0
         self.__add_count_div = 0
         self.__pages = []
+        self.__errors = []
         self.__statistic = []
 
         if level == 1:
@@ -33,57 +34,6 @@ class MyWizard(QWizard):
 
         self.__pages.append(page)
 
-        # self.pages = []
-        #
-        # for _ in range(self.__page_num):
-        #     page = ExamplePage()
-        #     self.addPage(page)
-        #     self.pages.append(page)
-        #
-        # for _ in range(3):
-        #     page = ExamplePage()
-        #     self.addPage(page)
-        #     self.pages.append(page)
-
-        # self.setOptions(QWizard.NoBackButtonOnStartPage | QWizard.NoBackButtonOnLastPage)
-
-    # def nextId(self):
-    #     current_id = self.currentId()
-    #     current_page = self.__pages[current_id]
-    #
-    #     print(f'count:{self.__page_count}')
-    #     print(f'+:{self.__add_count_plus}')
-    #
-    #     if not current_page.has_answered():
-    #         page = ExamplePage()
-    #         self.__pages.append(page)
-    #         return self.addPage(page)
-    #
-    #     res = current_page.get_res()
-    #     self.__statistic.append(res)
-    #
-    #     if res == 1:
-    #         self.__page_count += 1
-    #         if self.__page_count > 2:
-    #             self.accept()
-    #         page = ExamplePage()
-    #         self.__pages.append(page)
-    #         return self.addPage(page)
-    #     else:
-    #         if self.__add_count_plus > 3:
-    #             self.__page_count += 1
-    #             print(self.__page_count)
-    #             if self.__page_count >= 2:
-    #                 self.accept()
-    #             page = ExamplePage()
-    #             self.__pages.append(page)
-    #             return self.addPage(page)
-    #         else:
-    #             self.__add_count_plus += 1
-    #             page = ExamplePage()
-    #             self.__pages.append(page)
-    #             return self.addPage(page)
-
     def nextId(self):
         current_id = self.currentId()
         current_page = self.__pages[current_id]
@@ -95,13 +45,13 @@ class MyWizard(QWizard):
 
         res = current_page.get_res()
         action = current_page.get_action()
+        self.__errors.append(current_page.get_error())
 
-        print(f'count:s{self.__page_count}')
-        print(
-            f'+:{self.__add_count_plus}  -:{self.__add_count_minus} *:{self.__add_count_mult} /:{self.__add_count_div}')
+        # print(f'count:s{self.__page_count}')
+        # print(
+        #     f'+:{self.__add_count_plus}  -:{self.__add_count_minus} *:{self.__add_count_mult} /:{self.__add_count_div}')
 
         self.__statistic.append(res)
-        print(self.__statistic)
 
         if res == 1:
             self.__page_count += 1
@@ -170,8 +120,10 @@ class MyWizard(QWizard):
                         return self.addPage(page)
 
     def get_statistic(self):
-        return sum(list(filter(lambda p: p == 1, self.__statistic))), len(
-            list(filter(lambda p: p == 0, self.__statistic)))
+        return (sum(list(filter(lambda p: p == 1, self.__statistic))), len(
+            list(filter(lambda p: p == 0, self.__statistic))), self.__errors.count("+"), self.__errors.count("-"),
+                self.__errors.count("*"), self.__errors.count("/"))
+
 
 
 class ExamplePage(QWizardPage):
@@ -189,7 +141,12 @@ class ExamplePage(QWizardPage):
             self.example = RandomExample1(action, sign=sign)
 
         self.radio_group = QButtonGroup()
-        arr = [self.example.get_result(), random.randint(-100, -1), random.randint(-100, -1), random.randint(-100, -1)]
+        arr = set()
+        arr.add(self.example.get_result())
+        while len(arr) != 4:
+            arr.add(random.randint(-100, 100))
+
+        arr = list(arr)
         random.shuffle(arr)
 
         self.label = QLabel(self.example.get_without_answer())
@@ -211,6 +168,8 @@ class ExamplePage(QWizardPage):
 
             if ans == self.example.get_result():
                 self.__res = 1
+            else:
+                self.__res = 0
 
         return self.radio_group.checkedButton() is not None
 
@@ -222,9 +181,9 @@ class ExamplePage(QWizardPage):
             return self.__res
         return 0
 
-    def get_errors(self):
+    def get_error(self):
         if self.__res == 0:
-            return ExampleError(self.example.get_action())
+            return self.example.get_action()
         return None
 
     def has_answered(self):

@@ -172,7 +172,9 @@ class MyWindow(QMainWindow):
     def set_new_result_lvl_1(self):
         self.num_lvl_1 += 1
         self.model.addRow(
-            f'Тест lvl 1 № {self.num_lvl_1}: {self.wizard_lvl_1.get_statistic()[0]} из {self.wizard_lvl_1.get_statistic()[0] + self.wizard_lvl_1.get_statistic()[1]} правильных ответов')
+            f'Тест lvl 1 № {self.num_lvl_1}: {self.wizard_lvl_1.get_statistic()[0]} из {self.wizard_lvl_1.get_statistic()[0] + self.wizard_lvl_1.get_statistic()[1]} правильных ответов, '
+            f'ошибок в сложении: {self.wizard_lvl_1.get_statistic()[2]}, в вычитании: {self.wizard_lvl_1.get_statistic()[3]}, в умножении: {self.wizard_lvl_1.get_statistic()[4]},'
+            f'в делении: {self.wizard_lvl_1.get_statistic()[5]}')
 
         self.wizard_lvl_1 = MyWizard(level=1)
         self.wizard_lvl_1.accepted.connect(self.set_new_result_lvl_1)
@@ -181,8 +183,9 @@ class MyWindow(QMainWindow):
     def set_new_result_lvl_2(self):
         self.num_lvl_2 += 1
         self.model.addRow(
-            f'Тест lvl 2 № {self.num_lvl_2}: {self.wizard_lvl_2.get_statistic()[0]} из {self.wizard_lvl_2.get_statistic()[0] + self.wizard_lvl_2.get_statistic()[1]} правильных ответов')
-
+            f'Тест lvl 2 № {self.num_lvl_2}: {self.wizard_lvl_2.get_statistic()[0]} из {self.wizard_lvl_2.get_statistic()[0] + self.wizard_lvl_2.get_statistic()[1]} правильных ответов, '
+            f'ошибок в сложении: {self.wizard_lvl_2.get_statistic()[2]}, в вычитании: {self.wizard_lvl_2.get_statistic()[3]}, в умножении: {self.wizard_lvl_2.get_statistic()[4]},'
+            f'в делении: {self.wizard_lvl_2.get_statistic()[5]}')
         self.wizard_lvl_2 = MyWizard(level=2)
         self.wizard_lvl_2.accepted.connect(self.set_new_result_lvl_2)
 
