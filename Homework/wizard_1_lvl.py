@@ -120,9 +120,8 @@ class MyWizard(QWizard):
                         return self.addPage(page)
 
     def get_statistic(self):
-        return (sum(list(filter(lambda p: p == 1, self.__statistic))), len(
-            list(filter(lambda p: p == 0, self.__statistic))), self.__errors.count("+"), self.__errors.count("-"),
-                self.__errors.count("*"), self.__errors.count("/"))
+        return sum(list(filter(lambda p: p == 1, self.__statistic))), len(
+            list(filter(lambda p: p == 0, self.__statistic))), self.__errors.count("+"), self.__errors.count("-"), self.__errors.count("*"), self.__errors.count("/")
 
 
 
