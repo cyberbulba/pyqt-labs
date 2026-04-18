@@ -46,9 +46,6 @@ class MyWindow(QMainWindow):
         tree.resize(600, 400)
 
 
-
-
-
 def main():
     app = QApplication(sys.argv)
 

@@ -10,46 +10,7 @@ from generate_examples import RandomExample1
 from error import ExampleError
 from wizard_1_lvl import MyWizard
 from list_model import ListModel
-
-
-# class MyDialog(QDialog):
-#     def __init__(self):
-#         super().__init__()
-#
-#         self.setWindowTitle("Соглашение")
-#
-#         layout = QVBoxLayout()
-#
-#         self.example = RandomExample1()
-#
-#         self.radio_group = QButtonGroup()
-#         arr = [self.example.get_result(), random.randint(-100, -1), random.randint(-100, -1), random.randint(-100, -1)]
-#         random.shuffle(arr)
-#
-#         self.label = QLabel(self.example.get_without_answer())
-#         layout.addWidget(self.label)
-#
-#         for i in range(len(arr)):
-#             button = QRadioButton(str(arr[i]))
-#             self.radio_group.addButton(button, id=i)
-#             layout.addWidget(button)
-#
-#         self.radio_group.button(0).setChecked(True)
-#
-#
-#         button = QPushButton("ОК")
-#         layout.addWidget(button)
-#
-#         self.setLayout(layout)
-#
-#         button.clicked.connect(self.close_dialog)
-#
-#     def check_box_agreed(self):
-#         return self.__checkbox.isChecked()
-#
-#     @Slot()
-#     def close_dialog(self):
-#         self.accept()
+from dialog import MyDialog
 
 
 class MyWindow(QMainWindow):
@@ -84,7 +45,7 @@ class MyWindow(QMainWindow):
         self.button_lvl_2 = QPushButton("Тест (lvl 2)")
         self.layout.addWidget(self.button_lvl_2, 1, 5)
 
-        self.button_lvl_3 = QPushButton("Уровень 3")
+        self.button_lvl_3 = QPushButton("Сложный пример (lvl 3)")
         self.layout.addWidget(self.button_lvl_3, 2, 5)
 
         question_label = QLabel("Справочные материалы по действиям с отрицательными числами")
@@ -124,6 +85,10 @@ class MyWindow(QMainWindow):
         self.wizard_lvl_1.accepted.connect(self.set_new_result_lvl_1)
         self.wizard_lvl_2.accepted.connect(self.set_new_result_lvl_2)
 
+        self.dialog = MyDialog()
+        self.button_lvl_3.clicked.connect(self.open_dialog)
+        self.dialog.accepted.connect(self.set_new_result_lvl_3)
+
     @Slot()
     def open_wizard_lvl_1(self):
         self.wizard_lvl_1.exec()
@@ -131,6 +96,10 @@ class MyWindow(QMainWindow):
     @Slot()
     def open_wizard_lvl_2(self):
         self.wizard_lvl_2.exec()
+
+    @Slot()
+    def open_dialog(self):
+        self.dialog.exec()
 
     @Slot()
     def handle_plus(self):
@@ -188,6 +157,13 @@ class MyWindow(QMainWindow):
             f'в делении: {self.wizard_lvl_2.get_statistic()[5]}')
         self.wizard_lvl_2 = MyWizard(level=2)
         self.wizard_lvl_2.accepted.connect(self.set_new_result_lvl_2)
+
+    @Slot()
+    def set_new_result_lvl_3(self):
+        info = self.dialog.get_result()
+        self.model.addRow(f"Вы решили {'правильно' if info[0] == 1 else 'неправильно'} пример {info[1]}")
+
+        self.dialog.reset()
 
 
 def main():
