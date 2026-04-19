@@ -34,8 +34,33 @@ class MyWizard(QWizard):
 
         self.__pages.append(page)
 
+    def reset_wizard(self):
+        self.__page_num = 2
+        self.__page_count = 1
+        self.__add_count_plus = 0
+        self.__add_count_minus = 0
+        self.__add_count_mult = 0
+        self.__add_count_div = 0
+        self.__pages.clear()
+        self.__errors.clear()
+        self.__statistic.clear()
+
+        for page_id in self.pageIds():
+            self.removePage(page_id)
+
+        page = ExamplePage(sign=self.sign)
+        self.setPage(0, page)
+        self.__pages.append(page)
+
+        self.setStartId(0)
+        self.restart()
+
     def nextId(self):
         current_id = self.currentId()
+
+        if current_id < 0 or current_id >= len(self.__pages):
+            return -1
+
         current_page = self.__pages[current_id]
 
         if not current_page.has_answered():
@@ -47,16 +72,13 @@ class MyWizard(QWizard):
         action = current_page.get_action()
         self.__errors.append(current_page.get_error())
 
-        # print(f'count:s{self.__page_count}')
-        # print(
-        #     f'+:{self.__add_count_plus}  -:{self.__add_count_minus} *:{self.__add_count_mult} /:{self.__add_count_div}')
-
         self.__statistic.append(res)
 
         if res == 1:
             self.__page_count += 1
             if self.__page_count > 2:
                 self.accept()
+                return -1
             page = ExamplePage(sign=self.sign)
             self.__pages.append(page)
             return self.addPage(page)
@@ -68,6 +90,7 @@ class MyWizard(QWizard):
                         print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
+                            return -1
                         page = ExamplePage("+", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
@@ -82,6 +105,7 @@ class MyWizard(QWizard):
                         print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
+                            return -1
                         page = ExamplePage("-", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
@@ -95,7 +119,8 @@ class MyWizard(QWizard):
                         self.__page_count += 1
                         print(self.__page_count)
                         if self.__page_count >= 2:
-                            return self.accept()
+                            self.accept()
+                            return -1
                         page = ExamplePage("*", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
@@ -109,7 +134,8 @@ class MyWizard(QWizard):
                         self.__page_count += 1
                         print(self.__page_count)
                         if self.__page_count >= 2:
-                            return self.accept()
+                            self.accept()
+                            return -1
                         page = ExamplePage("/", sign=self.sign)
                         self.__pages.append(page)
                         return self.addPage(page)
@@ -121,8 +147,8 @@ class MyWizard(QWizard):
 
     def get_statistic(self):
         return sum(list(filter(lambda p: p == 1, self.__statistic))), len(
-            list(filter(lambda p: p == 0, self.__statistic))), self.__errors.count("+"), self.__errors.count("-"), self.__errors.count("*"), self.__errors.count("/")
-
+            list(filter(lambda p: p == 0, self.__statistic))), self.__errors.count("+"), self.__errors.count(
+            "-"), self.__errors.count("*"), self.__errors.count("/")
 
 
 class ExamplePage(QWizardPage):

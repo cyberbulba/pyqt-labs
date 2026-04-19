@@ -131,16 +131,12 @@ class MyWindow(QMainWindow):
     @Slot()
     def finish_wizard_lvl_1(self):
         self.main_model.add_info(1, self.wizard_lvl_1.get_statistic())
-
-        self.wizard_lvl_1 = MyWizard(level=1)
-        self.wizard_lvl_1.accepted.connect(self.finish_wizard_lvl_1)
+        self.wizard_lvl_1.reset_wizard()
 
     @Slot()
     def finish_wizard_lvl_2(self):
         self.main_model.add_info(2, self.wizard_lvl_2.get_statistic())
-
-        self.wizard_lvl_2 = MyWizard(level=2)
-        self.wizard_lvl_2.accepted.connect(self.finish_wizard_lvl_2)
+        self.wizard_lvl_2.reset_wizard()
 
     @Slot()
     def finish_wizard_lvl_3(self):
