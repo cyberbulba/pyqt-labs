@@ -35,7 +35,11 @@ class MyWindow(QMainWindow):
 
         self.layout = QHBoxLayout(self.central_widget)
 
-        df = pd.read_csv("trees.csv")
+        try:
+            df = pd.read_csv("trees.csv")
+        except FileNotFoundError:
+            print("Файл не найден, не удастся построить график")
+            exit(1)
 
         self.create_first_chart(df)
         self.create_second_chart(df)

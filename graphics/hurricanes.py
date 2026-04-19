@@ -35,7 +35,11 @@ class MyWindow(QMainWindow):
 
         self.layout = QVBoxLayout(self.central_widget)
 
-        df = pd.read_csv("hurricanes.csv")
+        try:
+            df = pd.read_csv("hurricanes.csv")
+        except FileNotFoundError:
+            print("Файл не найден")
+            exit(1)
 
         self.create_first_chart(df)
         self.create_second_chart(df)
