@@ -12,7 +12,7 @@ from generate_examples import RandomExample1
 class MyWizard(QWizard):
     def __init__(self, level=1):
         super().__init__()
-        self.__page_num = 2
+        self.__page_num = 5
         self.__page_count = 1
         self.__add_count_plus = 0
         self.__add_count_minus = 0
@@ -27,7 +27,6 @@ class MyWizard(QWizard):
         else:
             self.sign = 0
 
-        self.setWindowFlags(Qt.FramelessWindowHint)
         self.setButtonLayout([
             QWizard.NextButton,
             QWizard.CancelButton
@@ -39,7 +38,7 @@ class MyWizard(QWizard):
         self.__pages.append(page)
 
     def reset_wizard(self):
-        self.__page_num = 2
+        self.__page_num = 5
         self.__page_count = 1
         self.__add_count_plus = 0
         self.__add_count_minus = 0
@@ -80,7 +79,7 @@ class MyWizard(QWizard):
 
         if res == 1:
             self.__page_count += 1
-            if self.__page_count > 2:
+            if self.__page_count > self.__page_num:
                 self.accept()
                 return -1
             page = ExamplePage(sign=self.sign)
@@ -91,7 +90,7 @@ class MyWizard(QWizard):
                 case "+":
                     if self.__add_count_plus > 3:
                         self.__page_count += 1
-                        if self.__page_count >= 2:
+                        if self.__page_count >= self.__page_num:
                             self.accept()
                             return -1
                         page = ExamplePage("+", sign=self.sign)
@@ -105,7 +104,7 @@ class MyWizard(QWizard):
                 case "-":
                     if self.__add_count_minus > 3:
                         self.__page_count += 1
-                        if self.__page_count >= 2:
+                        if self.__page_count >= self.__page_num:
                             self.accept()
                             return -1
                         page = ExamplePage("-", sign=self.sign)
@@ -119,7 +118,7 @@ class MyWizard(QWizard):
                 case "*":
                     if self.__add_count_mult > 3:
                         self.__page_count += 1
-                        if self.__page_count >= 2:
+                        if self.__page_count >= self.__page_num:
                             self.accept()
                             return -1
                         page = ExamplePage("*", sign=self.sign)
@@ -133,7 +132,7 @@ class MyWizard(QWizard):
                 case "/":
                     if self.__add_count_div > 3:
                         self.__page_count += 1
-                        if self.__page_count >= 2:
+                        if self.__page_count >= self.__page_num:
                             self.accept()
                             return -1
                         page = ExamplePage("/", sign=self.sign)
