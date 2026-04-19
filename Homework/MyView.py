@@ -31,14 +31,17 @@ class MyWindow(QMainWindow):
         self.layout = QGridLayout(self.central_widget)
         self.main_model = MyModel()
 
+        train_label = QLabel("Тренировка:")
+        self.layout.addWidget(train_label, 0, 5)
+
         self.button_lvl_1 = QPushButton("Тест (lvl 1)")
-        self.layout.addWidget(self.button_lvl_1, 0, 5)
+        self.layout.addWidget(self.button_lvl_1, 1, 5)
 
         self.button_lvl_2 = QPushButton("Тест (lvl 2)")
-        self.layout.addWidget(self.button_lvl_2, 1, 5)
+        self.layout.addWidget(self.button_lvl_2, 2, 5)
 
         self.button_lvl_3 = QPushButton("Сложный пример (lvl 3)")
-        self.layout.addWidget(self.button_lvl_3, 2, 5)
+        self.layout.addWidget(self.button_lvl_3, 3, 5)
 
         question_label = QLabel("Справочные материалы по действиям с отрицательными числами")
         self.layout.addWidget(question_label, 0, 0, 1, 4)

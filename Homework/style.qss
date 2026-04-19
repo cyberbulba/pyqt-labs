@@ -1,21 +1,19 @@
 QLabel {
-    border-style: outset;
-    border-width: 1px;
-    border-radius: 5px;
-    font: bold 14px "Times New Roman";
+    font: bold 25px "Times New Roman";
     qproperty-alignment: AlignCenter;
-    color: #ad785f;
+    color: white;
 }
 
 QPushButton {
     border-style: outset;
     max-width: 300px;
     border-width: 3px;
-    border-color: green;
+    border-color: blue;
     border-radius: 5px;
     font: bold 14px "Times New Roman";
     padding: 10 px;
-    background-color: lightgreen;
+    background-color: #5e52fa;
+    color: white;
 }
 
 QPushButton:hover {
@@ -27,18 +25,46 @@ QPushButton:pressed {
 }
 
 QTextEdit {
-    border-style: none;
-    font: 14px "Times New Roman";
-    padding: 5px;
+    border-style: outset;
+    border-width: 3px;
+    border-color: blue;
+    border-radius: 20px;
+    background-color: #5e52fa;
+    font: bold 20px "Times New Roman";
+    padding: 20px;
+    color: white;
+    margin: 40px;
 }
 
-QLineEdit {
-    font: 14px "Times New Roman";
-    padding: 10px;
-    color: #ad785f;
+QListView {
+    border-style: outset;
+    border-width: 3px;
+    border-color: blue;
+    border-radius: 20px;
+    background-color: #5e52fa;
+    font: bold 20px "Times New Roman";
+    padding: 20px;
+    color: white;
+    margin: 40px;
 }
 
-QCheckBox {
-    font: 14px "Times New Roman";
-    padding: 10px;
+QMainWindow {
+    background-color: black;
+}
+
+QDialog QLabel {
+    font: bold 25px "Times New Roman";
+    qproperty-alignment: AlignCenter;
+    color: black;
+}
+
+QRadioButton {
+    font: bold 20px "Times New Roman";
+    color: black;
+}
+
+QWizardPage QLabel {
+    font: bold 25px "Times New Roman";
+    qproperty-alignment: AlignCenter;
+    color: black;
 }

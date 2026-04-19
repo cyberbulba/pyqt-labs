@@ -22,10 +22,13 @@ class MyDialog(QDialog):
         layout = QVBoxLayout()
 
         self.examples = []
-        with open("triple_examples.csv", "r", encoding="utf-8") as file:
-            reader = csv.reader(file)
-            for row in reader:
-                self.examples.append((row[0], int(row[1])))
+        try:
+            with open("triple_examples.csv", "r", encoding="utf-8") as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    self.examples.append((row[0], int(row[1])))
+        except FileNotFoundError:
+            self.examples.append(('-3 - 2 * (-5)', 7))
 
         self.__example = random.choice(self.examples)
         self.label = QLabel(f'Решите пример: {self.__example[0]}')

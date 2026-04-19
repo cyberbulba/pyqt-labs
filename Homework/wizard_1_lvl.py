@@ -5,7 +5,7 @@ from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtWidgets import QGridLayout, QTextEdit, QWizard, QMessageBox, QLineEdit, QWizardPage, QCheckBox
 from PySide6.QtWidgets import QPushButton, QDialog, QButtonGroup, QRadioButton
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
-from PySide6.QtCore import Slot, QRegularExpression
+from PySide6.QtCore import Slot, QRegularExpression, Qt
 from generate_examples import RandomExample1
 from error import ExampleError
 
@@ -28,7 +28,14 @@ class MyWizard(QWizard):
         else:
             self.sign = 0
 
-        self.setWindowTitle("Wizard")
+        # self.setWindowTitle("Wizard")
+
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setButtonLayout([
+            QWizard.NextButton,
+            QWizard.CancelButton
+        ])
+
         page = ExamplePage(sign=self.sign)
         self.setPage(0, page)
 
@@ -87,7 +94,6 @@ class MyWizard(QWizard):
                 case "+":
                     if self.__add_count_plus > 3:
                         self.__page_count += 1
-                        print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
                             return -1
@@ -102,7 +108,6 @@ class MyWizard(QWizard):
                 case "-":
                     if self.__add_count_minus > 3:
                         self.__page_count += 1
-                        print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
                             return -1
@@ -117,7 +122,6 @@ class MyWizard(QWizard):
                 case "*":
                     if self.__add_count_mult > 3:
                         self.__page_count += 1
-                        print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
                             return -1
@@ -132,7 +136,6 @@ class MyWizard(QWizard):
                 case "/":
                     if self.__add_count_div > 3:
                         self.__page_count += 1
-                        print(self.__page_count)
                         if self.__page_count >= 2:
                             self.accept()
                             return -1
@@ -189,7 +192,7 @@ class ExamplePage(QWizardPage):
     def isComplete(self):
         if self.radio_group.checkedButton():
             self.__answered = True
-            ans = int(self.radio_group.checkedButton().text())
+            ans = float(self.radio_group.checkedButton().text())
 
             if ans == self.example.get_result():
                 self.__res = 1

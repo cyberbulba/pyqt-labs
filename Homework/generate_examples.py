@@ -27,7 +27,7 @@ class RandomExample1:
             case "*":
                 return self.__a * self.__b
             case "/":
-                return self.__a // self.__b
+                return round(self.__a / self.__b, 1)
         return None
 
     def get_a(self):
