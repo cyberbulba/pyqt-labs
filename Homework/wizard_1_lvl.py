@@ -7,7 +7,6 @@ from PySide6.QtWidgets import QPushButton, QDialog, QButtonGroup, QRadioButton
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Slot, QRegularExpression, Qt
 from generate_examples import RandomExample1
-from error import ExampleError
 
 
 class MyWizard(QWizard):
@@ -27,8 +26,6 @@ class MyWizard(QWizard):
             self.sign = 1
         else:
             self.sign = 0
-
-        # self.setWindowTitle("Wizard")
 
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setButtonLayout([

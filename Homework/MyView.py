@@ -32,19 +32,19 @@ class MyWindow(QMainWindow):
         self.main_model = MyModel()
 
         train_label = QLabel("Тренировка:")
-        self.layout.addWidget(train_label, 0, 5)
+        self.layout.addWidget(train_label, 0, 6)
 
         self.button_lvl_1 = QPushButton("Тест (lvl 1)")
-        self.layout.addWidget(self.button_lvl_1, 1, 5)
+        self.layout.addWidget(self.button_lvl_1, 1, 6)
 
         self.button_lvl_2 = QPushButton("Тест (lvl 2)")
-        self.layout.addWidget(self.button_lvl_2, 2, 5)
+        self.layout.addWidget(self.button_lvl_2, 2, 6)
 
         self.button_lvl_3 = QPushButton("Сложный пример (lvl 3)")
-        self.layout.addWidget(self.button_lvl_3, 3, 5)
+        self.layout.addWidget(self.button_lvl_3, 3, 6)
 
         question_label = QLabel("Справочные материалы по действиям с отрицательными числами")
-        self.layout.addWidget(question_label, 0, 0, 1, 4)
+        self.layout.addWidget(question_label, 0, 0, 1, 5)
 
         self.button_plus = QPushButton("+")
         self.layout.addWidget(self.button_plus, 1, 0)
@@ -62,13 +62,17 @@ class MyWindow(QMainWindow):
         self.layout.addWidget(self.button_div, 1, 3)
         self.button_div.clicked.connect(self.handle_div)
 
+        self.button_many_actions = QPushButton("Несколько действий")
+        self.layout.addWidget(self.button_many_actions, 1, 4)
+        self.button_many_actions.clicked.connect(self.many_actions_info)
+
         self.textEdit = QTextEdit()
         self.textEdit.setReadOnly(True)
-        self.layout.addWidget(self.textEdit, 2, 0, 1, 4)
+        self.layout.addWidget(self.textEdit, 2, 0, 1, 5)
 
         view = QListView()
         view.setModel(self.main_model.model)
-        self.layout.addWidget(view, 3, 0, 1, 4)
+        self.layout.addWidget(view, 3, 0, 1, 5)
 
         self.wizard_lvl_1 = MyWizard(level=1)
         self.wizard_lvl_2 = MyWizard(level=2)
@@ -130,6 +134,18 @@ class MyWindow(QMainWindow):
                               "2. Если отрицательное число делим на положительное, например -10 / 2, то результат будет отрицательным: \n"
                               "10 / 2 = 5, и заменить знак на противоположный: -5\n"
                               "3. Если делимое равно 0, например 0 / (-5), то частное равно 0\n")
+
+    @Slot()
+    def many_actions_info(self):
+        self.textEdit.setText("Порядок выполнения действий в выражениях (тот же самый, если бы у нас были положительные числа):\n "
+                              "1. Первыми всегда вычисляются действия в скобках ( ), например в выражении (-10 - 4) * 2 \n"
+                              "сначала решаем скобку: -10 - 4 = -14, затем умножаем: -14 * 2 = -28\n"
+                              "2. Умножение и деление имеют одинаковый приоритет и выполняются строго слева направо, \n"
+                              "например -16 / 4 * 3. Делим -16 на 4, получаем -4, затем умножаем на 3: -4 * 3 = -12\n"
+                              "3. Сложение и вычитание выполняются в последнюю очередь, также слева направо, \n"
+                              "например -25 - 8 + 5. Сначала вычитаем: -25 - 8 = -33, затем прибавляем: -33 + 5 = -28\n"
+                              "4. Если в выражении есть отрицательные числа, их знаки учитываются на каждом шаге, \n"
+                              "например -7 + (-3) * (-4). Сначала умножение: -3 * (-4) = 12, затем сложение: -7 + 12 = 5\n")
 
     @Slot()
     def finish_wizard_lvl_1(self):
