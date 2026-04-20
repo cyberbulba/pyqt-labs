@@ -18,7 +18,7 @@ class MyModel(QAbstractItemModel):
         num = self.num_lvl_1 if level == 1 else self.num_lvl_2
 
         self.model.addRow(
-            f'Тест lvl {level} № {num}: {info[0]} из {info[0] + info[1]} правильных ответов, '
+            f'Тест lvl {level} № {num}: {info[0]} из {info[0] + info[1]} правильных ответов ({round(info[0] / (info[0] + info[1]) * 100, 2)}%), '
             f'ошибок в сложении: {info[2]}, в вычитании: {info[3]}, в умножении: {info[4]},'
             f'в делении: {info[5]}')
 
