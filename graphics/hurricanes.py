@@ -36,19 +36,19 @@ class MyWindow(QMainWindow):
         self.layout = QVBoxLayout(self.central_widget)
 
         try:
-            df = pd.read_csv("hurricanes.csv")
+            self.df = pd.read_csv("hurricanes.csv")
         except FileNotFoundError:
             print("Файл не найден")
             exit(1)
 
-        self.create_first_chart(df)
-        self.create_second_chart(df)
+        self.create_first_chart()
+        self.create_second_chart()
 
-    def create_first_chart(self, df):
+    def create_first_chart(self):
         series = QBarSeries()
 
         set = QBarSet("")
-        set.append(df["2007"].tolist())
+        set.append(self.df["2007"].tolist())
         series.append(set)
 
         chart = QChart()
@@ -58,7 +58,7 @@ class MyWindow(QMainWindow):
         chart.setTitle("Столбчатая диаграмма ураганов в 2007 году")
         chart.setAnimationOptions(QChart.SeriesAnimations)
 
-        categories = df["Month"].tolist()
+        categories = self.df["Month"].tolist()
         axis_x = QBarCategoryAxis()
         axis_x.setTitleText("Месяц")
         axis_x.append(categories)
@@ -75,10 +75,10 @@ class MyWindow(QMainWindow):
         _chart_view.setRenderHint(QPainter.Antialiasing)
         self.layout.addWidget(_chart_view)
 
-    def create_second_chart(self, df):
+    def create_second_chart(self):
         data = []
         for i in range(2005, 2016):
-            data.append(int(df[str(i)].sum()))
+            data.append(int(self.df[str(i)].sum()))
 
         series = QBarSeries()
 
@@ -106,9 +106,9 @@ class MyWindow(QMainWindow):
         chart.addAxis(axis_y, Qt.AlignLeft)
         series.attachAxis(axis_y)
 
-        _chart_view = QChartView(chart)
-        _chart_view.setRenderHint(QPainter.Antialiasing)
-        self.layout.addWidget(_chart_view)
+        chart_view = QChartView(chart)
+        chart_view.setRenderHint(QPainter.Antialiasing)
+        self.layout.addWidget(chart_view)
 
 
 def main():

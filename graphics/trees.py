@@ -36,20 +36,20 @@ class MyWindow(QMainWindow):
         self.layout = QHBoxLayout(self.central_widget)
 
         try:
-            df = pd.read_csv("trees.csv")
+            self.df = pd.read_csv("trees.csv")
         except FileNotFoundError:
             print("Файл не найден, не удастся построить график")
             exit(1)
 
-        self.create_first_chart(df)
-        self.create_second_chart(df)
-        self.create_third_chart(df)
+        self.create_first_chart()
+        self.create_second_chart()
+        self.create_third_chart()
 
-    def create_first_chart(self, df):
+    def create_first_chart(self):
         series = QScatterSeries()
 
-        for i in range(len(df["Girth"].tolist())):
-            series.append(df["Girth"].tolist()[i], df["Height"].tolist()[i])
+        for i in range(len(self.df["Girth"].tolist())):
+            series.append(self.df["Girth"].tolist()[i], self.df["Height"].tolist()[i])
 
         chart = QChart()
         chart.legend().setVisible(False)
@@ -74,11 +74,11 @@ class MyWindow(QMainWindow):
         _chart_view.setRenderHint(QPainter.Antialiasing)
         self.layout.addWidget(_chart_view)
 
-    def create_second_chart(self, df):
+    def create_second_chart(self):
         series = QScatterSeries()
 
-        for i in range(len(df["Volume"].tolist())):
-            series.append(df["Volume"].tolist()[i], df["Height"].tolist()[i])
+        for i in range(len(self.df["Volume"].tolist())):
+            series.append(self.df["Volume"].tolist()[i], self.df["Height"].tolist()[i])
 
         chart = QChart()
         chart.legend().setVisible(False)
@@ -103,11 +103,11 @@ class MyWindow(QMainWindow):
         _chart_view.setRenderHint(QPainter.Antialiasing)
         self.layout.addWidget(_chart_view)
 
-    def create_third_chart(self, df):
+    def create_third_chart(self):
         series = QScatterSeries()
 
-        for i in range(len(df["Girth"].tolist())):
-            series.append(df["Girth"].tolist()[i], df["Volume"].tolist()[i])
+        for i in range(len(self.df["Girth"].tolist())):
+            series.append(self.df["Girth"].tolist()[i], self.df["Volume"].tolist()[i])
 
         chart = QChart()
         chart.legend().setVisible(False)
