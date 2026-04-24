@@ -68,3 +68,8 @@ QWizardPage QLabel {
     qproperty-alignment: AlignCenter;
     color: black;
 }
+
+QTabWidget::pane {
+    background-color: #000000;
+    border: none;
+}

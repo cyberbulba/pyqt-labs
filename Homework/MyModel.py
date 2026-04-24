@@ -1,5 +1,6 @@
 from PySide6.QtCore import QAbstractItemModel
 from list_model import ListModel
+from extra_question import QuestionModel
 
 
 class MyModel(QAbstractItemModel):
@@ -9,6 +10,7 @@ class MyModel(QAbstractItemModel):
         self.num_lvl_2 = 0
 
         self.model = ListModel()
+        self.question_model = QuestionModel()
 
     def add_info(self, level, info):
         if level == 1:
@@ -24,3 +26,15 @@ class MyModel(QAbstractItemModel):
 
     def add_example_info(self, info):
         self.model.addRow(f"Вы решили {'правильно' if info[0] == 1 else 'неправильно'} пример {info[1]}")
+
+    def set_plus(self):
+        self.question_model.generate_new_question("+")
+
+    def set_minus(self):
+        self.question_model.generate_new_question("-")
+
+    def set_mult(self):
+        self.question_model.generate_new_question("*")
+
+    def set_div(self):
+        self.question_model.generate_new_question("/")
