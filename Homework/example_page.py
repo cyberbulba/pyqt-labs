@@ -12,7 +12,6 @@ from generate_examples import RandomExample1
 class ExamplePage(QWizardPage):
     def __init__(self, action=None, sign=1):
         super().__init__()
-        self.__answered = False
         label = QLabel("Решите пример:")
 
         layout = QVBoxLayout(self)
@@ -46,7 +45,6 @@ class ExamplePage(QWizardPage):
 
     def isComplete(self):
         if self.radio_group.checkedButton():
-            self.__answered = True
             ans = float(self.radio_group.checkedButton().text())
 
             if ans == self.example.get_result():
@@ -68,9 +66,6 @@ class ExamplePage(QWizardPage):
         if self.__res == 0:
             return self.example.get_action()
         return None
-
-    def has_answered(self):
-        return self.__answered
 
     @Slot()
     def check_complete(self):

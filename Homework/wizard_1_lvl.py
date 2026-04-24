@@ -67,10 +67,9 @@ class MyWizard(QWizard):
 
         current_page = self.__pages[current_id]
 
-        if not current_page.has_answered():
-            page = ExamplePage(sign=self.sign)
-            self.__pages.append(page)
-            return self.addPage(page)
+        if not current_page.isComplete():
+            return current_id
+
 
         res = current_page.get_res()
         action = current_page.get_action()
