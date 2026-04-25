@@ -73,3 +73,27 @@ QTabWidget::pane {
     background-color: #000000;
     border: none;
 }
+
+QTabBar::tab {
+    background-color: #5e52fa;
+    font: bold 14px "Times New Roman";
+    color: white;
+}
+
+QuestionView {
+    border-style: solid;
+    border-width: 15px;
+    border-color: #5e52fa;
+    border-radius: 20px;
+}
+
+QuestionView QSpinBox {
+    background-color: #5e52fa;
+    font: bold 25px "Times New Roman";
+    max-width: 300px;
+    color: white;
+}
+
+QuestionView QPushButton {
+    min-width: 300px;
+}

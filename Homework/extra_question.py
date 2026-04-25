@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QPushButton
-from PySide6.QtCore import QAbstractItemModel, Slot, Signal
+from PySide6.QtCore import QAbstractItemModel, Slot, Signal, Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QSpinBox, QLineEdit
 from generate_examples import RandomExample1
 
@@ -10,7 +10,9 @@ class QuestionView(QWidget):
         self.model = None
 
         self.layout = QVBoxLayout(self)
-        self.label = QLabel("Выберите действие:")
+        self.layout.setAlignment(Qt.AlignCenter)
+        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.label = QLabel("Выберите действие (кнопки слева):")
         self.layout.addWidget(self.label)
 
         self.__spinbox = QSpinBox()
