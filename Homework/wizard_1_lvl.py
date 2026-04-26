@@ -13,7 +13,7 @@ from example_page import ExamplePage
 class MyWizard(QWizard):
     def __init__(self, level=1):
         super().__init__()
-        self.__page_num = 2
+        self.__page_num = 3
         self.__page_count = 1
         self.__add_count_plus = 0
         self.__add_count_minus = 0
@@ -40,7 +40,7 @@ class MyWizard(QWizard):
 
     def reset_wizard(self):
         """метод выполняет обновление wizard перед новым его запуском"""
-        self.__page_num = 2
+        self.__page_num = 3
         self.__page_count = 1
         self.__add_count_plus = 0
         self.__add_count_minus = 0
