@@ -42,4 +42,3 @@ class QuestionView(QWidget):
         """метод, который устанавливает в label для проверки ответа полученный и правильный ответы"""
         if self.__model.get_example() is not None:
             self.__res_line.setText(f"Ваш ответ {self.__spinbox.value()}, правильный: {self.__model.get_answer()}")
-
