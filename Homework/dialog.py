@@ -45,11 +45,13 @@ class MyDialog(QDialog):
         button.clicked.connect(self.close_dialog)
 
     def reset(self):
+        """метод для обновления диалога после закрытия предыдущего"""
         self.__example = random.choice(self.examples)
         self.label.setText(f'Решите пример: {self.__example[0]}')
 
     @Slot()
     def close_dialog(self):
+        """метод для закрытия диалога"""
         if self.__spinbox.value() == self.__example[1]:
             self.__result = 1
         else:
@@ -57,4 +59,5 @@ class MyDialog(QDialog):
         self.accept()
 
     def get_result(self):
+        """метод для получения результата решения примера для последующей записи в историю прохождения заданий"""
         return self.__result, self.__example[0]

@@ -19,6 +19,7 @@ class RandomExample1:
             self.__b = random.randint(1, 100)
 
     def get_result(self):
+        """метод получает ответ на пример"""
         match self.__action:
             case "+":
                 return self.__a + self.__b
@@ -31,16 +32,17 @@ class RandomExample1:
         return None
 
     def get_a(self):
+        """геттер для первого числа примера"""
         return self.__a
 
     def get_b(self):
+        """геттер для второго числа примера"""
         return self.__b
 
     def get_action(self):
+        """геттер для действия примера"""
         return self.__action
 
     def get_without_answer(self):
+        """метод для получения примера без ответа"""
         return f'{self.get_a()} {self.get_action()} {self.get_b()} = ?'
-
-    def __str__(self):
-        return f'{self.get_a()} {self.get_action()} {self.get_b()} = {self.get_result()}'

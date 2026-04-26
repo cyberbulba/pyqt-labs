@@ -39,11 +39,12 @@ class ExamplePage(QWizardPage):
             self.radio_group.addButton(button, id=i)
             layout.addWidget(button)
 
-        self.radio_group.buttonClicked.connect(self.check_complete)
+        self.radio_group.buttonClicked.connect(self.completeChanged)
 
         self.__res = 0
 
     def isComplete(self):
+        """метод, проверяющий, что на странице wizard дан ответ на пример"""
         if self.radio_group.checkedButton():
             ans = float(self.radio_group.checkedButton().text())
 
@@ -55,18 +56,17 @@ class ExamplePage(QWizardPage):
         return self.radio_group.checkedButton() is not None
 
     def get_action(self):
+        """метод, возвращающий действие, которое надо выполнить в примере (+, -, *, /)"""
         return self.example.get_action()
 
     def get_res(self):
+        """метод, возвращающий результат решения примера"""
         if self.__res:
             return self.__res
         return 0
 
     def get_error(self):
+        """метод, возвращающий действие, в котором пользователь ошибся"""
         if self.__res == 0:
             return self.example.get_action()
         return None
-
-    @Slot()
-    def check_complete(self):
-        self.completeChanged.emit()

@@ -39,6 +39,7 @@ class MyWizard(QWizard):
         self.__pages.append(page)
 
     def reset_wizard(self):
+        """метод выполняет обновление wizard перед новым его запуском"""
         self.__page_num = 2
         self.__page_count = 1
         self.__add_count_plus = 0
@@ -60,6 +61,7 @@ class MyWizard(QWizard):
         self.restart()
 
     def nextId(self):
+        """метод настраивает переходы между страницами wizard"""
         current_id = self.currentId()
 
         if current_id < 0 or current_id >= len(self.__pages):
@@ -69,7 +71,6 @@ class MyWizard(QWizard):
 
         if not current_page.isComplete():
             return current_id
-
 
         res = current_page.get_res()
         action = current_page.get_action()
@@ -145,6 +146,7 @@ class MyWizard(QWizard):
                         return self.addPage(page)
 
     def get_statistic(self):
+        """метод, необходимый для получения статистики прохождения теста, находящегося в wizard"""
         return sum(list(filter(lambda p: p == 1, self.__statistic))), len(
             list(filter(lambda p: p == 0, self.__statistic))), self.__errors.count("+"), self.__errors.count(
             "-"), self.__errors.count("*"), self.__errors.count("/")

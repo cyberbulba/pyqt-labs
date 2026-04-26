@@ -3,11 +3,11 @@ from PySide6.QtWidgets import QPushButton
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow
 from PySide6.QtCore import Slot
 
-from Homework.extra_question import QuestionView
+from Homework.ExtraQuestionView import QuestionView
 from wizard_1_lvl import MyWizard
 from dialog import MyDialog
 from MyModel import MyModel
-from extra_question import QuestionView
+from ExtraQuestionView import QuestionView
 
 
 class MyWindow(QMainWindow):
@@ -40,51 +40,52 @@ class MyWindow(QMainWindow):
         self.initExtraTabUI()
 
     def initMainTabUI(self):
-        self.layout_1 = QGridLayout(self.tab1)
+        """создание интерфейса на главной вкладке"""
+        layout_1 = QGridLayout(self.tab1)
         self.main_model = MyModel()
 
         train_label = QLabel("Тренировка:")
-        self.layout_1.addWidget(train_label, 0, 6)
+        layout_1.addWidget(train_label, 0, 6)
 
         self.button_lvl_1 = QPushButton("Тест (lvl 1)")
-        self.layout_1.addWidget(self.button_lvl_1, 1, 6)
+        layout_1.addWidget(self.button_lvl_1, 1, 6)
 
         self.button_lvl_2 = QPushButton("Тест (lvl 2)")
-        self.layout_1.addWidget(self.button_lvl_2, 2, 6)
+        layout_1.addWidget(self.button_lvl_2, 2, 6)
 
         self.button_lvl_3 = QPushButton("Сложный пример (lvl 3)")
-        self.layout_1.addWidget(self.button_lvl_3, 3, 6)
+        layout_1.addWidget(self.button_lvl_3, 3, 6)
 
         question_label = QLabel("Справочные материалы по действиям с отрицательными числами")
-        self.layout_1.addWidget(question_label, 0, 0, 1, 5)
+        layout_1.addWidget(question_label, 0, 0, 1, 5)
 
         self.button_plus = QPushButton("+")
-        self.layout_1.addWidget(self.button_plus, 1, 0)
+        layout_1.addWidget(self.button_plus, 1, 0)
         self.button_plus.clicked.connect(self.handle_plus)
 
         self.button_minus = QPushButton("-")
-        self.layout_1.addWidget(self.button_minus, 1, 1)
+        layout_1.addWidget(self.button_minus, 1, 1)
         self.button_minus.clicked.connect(self.handle_minus)
 
         self.button_mult = QPushButton("*")
-        self.layout_1.addWidget(self.button_mult, 1, 2)
+        layout_1.addWidget(self.button_mult, 1, 2)
         self.button_mult.clicked.connect(self.handle_mult)
 
         self.button_div = QPushButton("/")
-        self.layout_1.addWidget(self.button_div, 1, 3)
+        layout_1.addWidget(self.button_div, 1, 3)
         self.button_div.clicked.connect(self.handle_div)
 
         self.button_many_actions = QPushButton("Несколько действий")
-        self.layout_1.addWidget(self.button_many_actions, 1, 4)
+        layout_1.addWidget(self.button_many_actions, 1, 4)
         self.button_many_actions.clicked.connect(self.many_actions_info)
 
         self.textEdit = QTextEdit()
         self.textEdit.setReadOnly(True)
-        self.layout_1.addWidget(self.textEdit, 2, 0, 1, 5)
+        layout_1.addWidget(self.textEdit, 2, 0, 1, 5)
 
         view = QListView()
         view.setModel(self.main_model.model)
-        self.layout_1.addWidget(view, 3, 0, 1, 5)
+        layout_1.addWidget(view, 3, 0, 1, 5)
 
         self.wizard_lvl_1 = MyWizard(level=1)
         self.wizard_lvl_2 = MyWizard(level=2)
@@ -100,58 +101,67 @@ class MyWindow(QMainWindow):
         self.dialog.accepted.connect(self.finish_lvl_3)
 
     def initExtraTabUI(self):
-        self.layout_2 = QGridLayout(self.tab2)
+        """создание интерфейса на вкладке с решением доп. задач"""
+        layout_2 = QGridLayout(self.tab2)
 
         self.test_question = QuestionView()
         self.test_question.setModel(self.main_model.question_model)
-        self.layout_2.addWidget(self.test_question, 0, 1, 4, 1)
+        layout_2.addWidget(self.test_question, 0, 1, 4, 1)
 
         self.button_plus = QPushButton("+")
-        self.layout_2.addWidget(self.button_plus, 0, 0)
+        layout_2.addWidget(self.button_plus, 0, 0)
         self.button_plus.clicked.connect(self.set_plus_question)
 
         self.button_minus = QPushButton("-")
-        self.layout_2.addWidget(self.button_minus, 1, 0)
+        layout_2.addWidget(self.button_minus, 1, 0)
         self.button_minus.clicked.connect(self.set_minus_question)
 
         self.button_mult = QPushButton("*")
-        self.layout_2.addWidget(self.button_mult, 2, 0)
+        layout_2.addWidget(self.button_mult, 2, 0)
         self.button_mult.clicked.connect(self.set_mult_question)
 
         self.button_div = QPushButton("/")
-        self.layout_2.addWidget(self.button_div, 3, 0)
+        layout_2.addWidget(self.button_div, 3, 0)
         self.button_div.clicked.connect(self.set_div_question)
 
     @Slot()
     def set_plus_question(self):
+        """изменения знака на + для доп. примера"""
         self.main_model.set_plus()
 
     @Slot()
     def set_minus_question(self):
+        """изменения знака на - для доп. примера"""
         self.main_model.set_minus()
 
     @Slot()
     def set_mult_question(self):
+        """изменения знака на * для доп. примера"""
         self.main_model.set_mult()
 
     @Slot()
     def set_div_question(self):
+        """изменения знака на / для доп. примера"""
         self.main_model.set_div()
 
     @Slot()
     def open_wizard_lvl_1(self):
+        """открытие теста с задачами 1 уровня (отрицательное и положительное числа)"""
         self.wizard_lvl_1.exec()
 
     @Slot()
     def open_wizard_lvl_2(self):
+        """открытие теста с задачами 2 уровня (отрицательное и отрицательное числа)"""
         self.wizard_lvl_2.exec()
 
     @Slot()
     def open_dialog(self):
+        """открытие диалога для решения примера с 3 действиями"""
         self.dialog.exec()
 
     @Slot()
     def handle_plus(self):
+        """вывод справки о действии + с отрицательным числом"""
         self.textEdit.setText("Рассмотрим сложение с отрицательным числом:\n "
                               "1. Если число, к которому прибавляем положительное, пример -3 + 5, \n"
                               "тогда чтобы получить ответ, необходимо вычесть из него отрицательное число, то есть 5 - 3 = 2\n"
@@ -161,6 +171,7 @@ class MyWindow(QMainWindow):
 
     @Slot()
     def handle_minus(self):
+        """вывод справки о действии - с отрицательным числом"""
         self.textEdit.setText("Рассмотрим вычитание из отрицательного числа:\n "
                               "1. Если из отрицательного числа вычитаем положительное, пример -3 - 5, \n"
                               "тогда необходимо сложить модули чисел: 3 + 5 = 8 и поставить знак минус: -3 - 5 = -8\n"
@@ -170,6 +181,7 @@ class MyWindow(QMainWindow):
 
     @Slot()
     def handle_mult(self):
+        """вывод справки о действии * с отрицательным числом"""
         self.textEdit.setText("Рассмотрим умножение с отрицательным числом:\n "
                               "1. Если отрицательное число умножаем на отрицательное, пример -3 * (-5), \n"
                               "тогда минус на минус дает плюс. Перемножаем модули: 3 * 5 = 15, результат: 15\n"
@@ -179,6 +191,7 @@ class MyWindow(QMainWindow):
 
     @Slot()
     def handle_div(self):
+        """вывод справки о действии / с отрицательным числом"""
         self.textEdit.setText("Рассмотрим деление с отрицательным числом:\n "
                               "1. Если отрицательное число делим на отрицательное, пример -10 / (-2), \n"
                               "тогда минус на минус дает плюс. Делим модули: 10 / 2 = 5, результат: 5\n"
@@ -188,6 +201,7 @@ class MyWindow(QMainWindow):
 
     @Slot()
     def many_actions_info(self):
+        """вывод справки о том что делать, если несколько действий"""
         self.textEdit.setText(
             "Порядок выполнения действий в выражениях (тот же самый, если бы у нас были положительные числа):\n "
             "1. Первыми всегда вычисляются действия в скобках ( ), например в выражении (-10 - 4) * 2 \n"
@@ -201,16 +215,19 @@ class MyWindow(QMainWindow):
 
     @Slot()
     def finish_wizard_lvl_1(self):
+        """обработка прохождения теста 1 уровня"""
         self.main_model.add_info(1, self.wizard_lvl_1.get_statistic())
         self.wizard_lvl_1.reset_wizard()
 
     @Slot()
     def finish_wizard_lvl_2(self):
+        """обработка прохождения теста 2 уровня"""
         self.main_model.add_info(2, self.wizard_lvl_2.get_statistic())
         self.wizard_lvl_2.reset_wizard()
 
     @Slot()
     def finish_lvl_3(self):
+        """обработка решения задачи с несколькими действиями"""
         info = self.dialog.get_result()
         self.main_model.add_example_info(info)
 
